@@ -145,51 +145,52 @@ def sample(z):
 # =                                    run                                     =
 # ==============================================================================
 
-ckpt_dir = os.path.join(output_dir, 'checkpoints')
-if not os.path.exists(ckpt_dir):
-    os.mkdir(ckpt_dir)
+if __name__ == '__main__':
+	ckpt_dir = os.path.join(output_dir, 'checkpoints')
+	if not os.path.exists(ckpt_dir):
+	    os.mkdir(ckpt_dir)
 
-# try:
-#     ckpt_path = os.path.join(ckpt_dir, 'xxx.ckpt')
-#     ckpt=torch.load(ckpt_path)
-#     ep, it_d, it_g = ckpt['ep'], ckpt['it_d'], ckpt['it_g']
-#     D.load_state_dict(ckpt['D'])
-#     G.load_state_dict(ckpt['G'])
-#     D_optimizer.load_state_dict(ckpt['D_optimizer'])
-#     G_optimizer.load_state_dict(ckpt['G_optimizer'])
-# except:
-#     ep, it_d, it_g = 0, 0, 0
+	# try:
+	#     ckpt_path = os.path.join(ckpt_dir, 'xxx.ckpt')
+	#     ckpt=torch.load(ckpt_path)
+	#     ep, it_d, it_g = ckpt['ep'], ckpt['it_d'], ckpt['it_g']
+	#     D.load_state_dict(ckpt['D'])
+	#     G.load_state_dict(ckpt['G'])
+	#     D_optimizer.load_state_dict(ckpt['D_optimizer'])
+	#     G_optimizer.load_state_dict(ckpt['G_optimizer'])
+	# except:
+	#     ep, it_d, it_g = 0, 0, 0
 
 
-# sample
-sample_dir = os.path.join(output_dir, 'samples_training')
-if not os.path.exists(sample_dir):
-	os.mkdir(sample_dir)
+	# sample
+	sample_dir = os.path.join(output_dir, 'samples_training')
+	if not os.path.exists(sample_dir):
+		os.mkdir(sample_dir)
 
-# main loop
-writer = tensorboardX.SummaryWriter(os.path.join(output_dir, 'summaries'))
-z = torch.randn(64, args.z_dim, 1, 1).to(device)  # a fixed noise for sampling
+	# main loop
+	writer = tensorboardX.SummaryWriter(os.path.join(output_dir, 'summaries'))
+	z = torch.randn(64, args.z_dim, 1, 1).to(device)  # a fixed noise for sampling
 
-for ep in tqdm.trange(args.epochs, desc='Epoch Loop'):
-    it_d, it_g = 0, 0
-    for x_real,flag in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
-        #print(x_real.shape)
-        x_real = x_real.to(device)
-        D_loss_dict = train_D(x_real)
-        it_d += 1
-        for k, v in D_loss_dict.items():
-            writer.add_scalar('D/%s' % k, v.data.cpu().numpy(), global_step=it_d)
+	for ep in tqdm.trange(args.epochs, desc='Epoch Loop'):
+	    it_d, it_g = 0, 0
+	    for x_real,flag in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
+	        #print(x_real.shape)
+	        x_real = x_real.to(device)
+	        D_loss_dict = train_D(x_real)
+	        it_d += 1
+	        for k, v in D_loss_dict.items():
+	            writer.add_scalar('D/%s' % k, v.data.cpu().numpy(), global_step=it_d)
 
-        if it_d % args.n_d == 0:
-            G_loss_dict = train_G()
-            it_g += 1
-            for k, v in G_loss_dict.items():
-                writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
-        # sample
-        if it_g % 100 == 0:
-            x_fake = (sample(z)+1)/2
-            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d_%d.jpg'%(ep,it_g), nrow=8)
-    # save checkpoint
-    if (ep+1)%5==0:
-        torch.save(G.state_dict(), ckpt_dir+'/Epoch_G_(%d).pth' % ep)
-        torch.save(D.state_dict(), ckpt_dir+'/Epoch_D_(%d).pth' % ep)
+	        if it_d % args.n_d == 0:
+	            G_loss_dict = train_G()
+	            it_g += 1
+	            for k, v in G_loss_dict.items():
+	                writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
+	        # sample
+	        if it_g % 100 == 0:
+	            x_fake = (sample(z)+1)/2
+	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d_%d.jpg'%(ep,it_g), nrow=8)
+	    # save checkpoint
+	    if (ep+1)%5==0:
+	        torch.save(G.state_dict(), ckpt_dir+'/Epoch_G_(%d).pth' % ep)
+	        torch.save(D.state_dict(), ckpt_dir+'/Epoch_D_(%d).pth' % ep)
