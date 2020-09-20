@@ -191,7 +191,7 @@ if __name__ == '__main__':
 	        #if it_g % 100 == 0:
 	    if True:
 	        #x_fake = (sample(z)+1)/2
-	        torch.no_grad:
+	        torch.no_grad():
 	            x_fake = sample(z)
 	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
 	    # save checkpoint
