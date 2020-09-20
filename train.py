@@ -173,7 +173,8 @@ if __name__ == '__main__':
 
 	for ep in tqdm.trange(args.epochs, desc='Epoch Loop'):
 	    it_d, it_g = 0, 0
-	    for x_real,flag in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
+	    #for x_real,flag in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
+	    for x_real in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
 	        #print(x_real.shape)
 	        x_real = x_real.to(device)
 	        D_loss_dict = train_D(x_real)
