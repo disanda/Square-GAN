@@ -81,8 +81,8 @@ else:  # cannot use batch normalization with gradient penalty
 # networks
 G = networks.ConvGenerator(args.z_dim, shape[-1], n_upsamplings=n_G_upsamplings).to(device)
 D = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, norm=d_norm).to(device)
-print(G)
-print(D)
+#print(G)
+#print(D)
 
 # adversarial_loss_functions
 d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss_mode)
@@ -188,7 +188,8 @@ if __name__ == '__main__':
 	            for k, v in G_loss_dict.items():
 	                writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
 	        # sample
-	        if it_g % 100 == 0:
+	        #if it_g % 100 == 0:
+	        if True:
 	            x_fake = (sample(z)+1)/2
 	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d_%d.jpg'%(ep,it_g), nrow=8)
 	    # save checkpoint
