@@ -86,11 +86,13 @@ D2 = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, no
 #print(D)
 
 # adversarial_loss_functions
-d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss_mode)
+d_loss_fn1, g_loss_fn1 = loss_func.get_adversarial_losses_fn(args.adversarial_loss_mode)
+d_loss_fn2, g_loss_fn2 = loss_func.get_adversarial_losses_fn('hinge_v1')
 
 # optimizer
 G_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
-D_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
+D_optimizer1 = torch.optim.Adam(D1.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
+D_optimizer2 = torch.optim.Adam(D2.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
 
 
 # ==============================================================================
@@ -99,40 +101,41 @@ D_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(args.beta_1, 0
 
 def train_G():
     G.train()
-    D.train()
-
+    D1.train()
+    D2.train()
     z = torch.randn(args.batch_size, args.z_dim, 1, 1).to(device)
     x_fake = G(z)
-
-    x_fake_d_logit = D(x_fake)
-    G_loss = g_loss_fn(x_fake_d_logit)
-
+    x_fake_d_logit1 = D1(x_fake)
+    x_fake_d_logit2 = D2(x_fake)
+    G_loss1 = g_loss_fn1(x_fake_d_logit1)
+    G_loss2 = g_loss_fn2(x_fake_d_logit2)
+    G_loss = G_loss1+G_loss2
     G.zero_grad()
     G_loss.backward()
     G_optimizer.step()
-
     return {'g_loss': G_loss}
 
 
 def train_D(x_real):
     G.train()
-    D.train()
-
+    D1.train()
+    D2.train()
     z = torch.randn(args.batch_size, args.z_dim, 1, 1).to(device)
     x_fake = G(z).detach()
-
-    x_real_d_logit = D(x_real)
-    x_fake_d_logit = D(x_fake)
+    x_real_d_logit1 = D1(x_real)
+    x_fake_d_logit1 = D1(x_fake)
+    x_real_d_logit2 = D2(x_real)
+    x_fake_d_logit2 = D2(x_fake)
+    
+    x_real_d_logit = x_real_d_logit1 + x_real_d_logit2
+    x_fake_d_logit = x_fake_d_logit1 + x_fake_d_logit2
 
     x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
     gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake, gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
-
     D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
-
     D.zero_grad()
     D_loss.backward()
     D_optimizer.step()
-
     return {'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
 
 
