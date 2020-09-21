@@ -76,7 +76,9 @@ python train.py --dataset=pose10 --epoch=2000 --adversarial_loss_mode=hinge_v2 -
 python train.py --dataset=pose10 --epoch=2000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=dragan --batch_size=1 
 #动作比下一个略少，无双人
 
-python train.py --dataset=pose10 --epoch=5000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-0-losss
+python train.py --dataset=pose10 --epoch=5000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-06-losss
 #效果最佳，动作全双人清晰
+
+python train.py --dataset=pose10 --epoch=5000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv1-gp-06-losss
 
 
