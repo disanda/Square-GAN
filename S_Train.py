@@ -137,7 +137,8 @@ def train_D(x_real):
     D1.zero_grad()
     D2.zero_grad()
     D_loss.backward()
-    D_optimizer.step()
+    D_optimizer1.step()
+    D_optimizer2.step()
     return {'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
 
 @torch.no_grad()
