@@ -80,7 +80,8 @@ else:  # cannot use batch normalization with gradient penalty
 
 # networks
 G = networks.ConvGenerator(args.z_dim, shape[-1], n_upsamplings=n_G_upsamplings).to(device)
-D = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, norm=d_norm).to(device)
+D1 = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, norm=d_norm).to(device)
+D2 = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, norm=d_norm).to(device)
 #print(G)
 #print(D)
 
@@ -189,12 +190,12 @@ if __name__ == '__main__':
 	                writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
 	        # sample
 	        #if it_g % 100 == 0:
-	    if (ep+1)%10:
+	    if True:
 	        #x_fake = (sample(z)+1)/2
 	        with torch.no_grad():
 	            x_fake = sample(z)
 	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
 	    # save checkpoint
-	    if (ep+1)%10==0:
+	    if (ep+1)%5==0:
 	        torch.save(G.state_dict(), ckpt_dir+'/Epoch_G_(%d).pth' % ep)
 	        torch.save(D.state_dict(), ckpt_dir+'/Epoch_D_(%d).pth' % ep)
