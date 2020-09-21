@@ -195,7 +195,7 @@ if __name__ == '__main__':
 	                writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
 	        # sample
 	        #if it_g % 100 == 0:
-	    if True:
+	    if (ep+1)%5==0:
 	        #x_fake = (sample(z)+1)/2
 	        with torch.no_grad():
 	            x_fake = sample(z)
