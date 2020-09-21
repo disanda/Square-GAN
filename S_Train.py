@@ -128,17 +128,16 @@ def train_D(x_real):
     x_fake_d_logit2 = D2(x_fake)
     x_real_d_loss1, x_fake_d_loss1 = d_loss_fn1(x_real_d_logit1, x_fake_d_logit1)
     x_real_d_loss2, x_fake_d_loss2 = d_loss_fn2(x_real_d_logit2, x_fake_d_logit2)
-
     x_real_d_loss = x_real_d_loss1 + x_real_d_loss2
     x_fake_d_loss = x_fake_d_loss1 + x_fake_d_loss2
-
-    gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake, gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
-    D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
+    gp1 = g_penal.gradient_penalty(functools.partial(D1), x_real, x_fake, gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
+    gp2 = g_penal.gradient_penalty(functools.partial(D2), x_real, x_fake, gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
+    gp = gp1 + gp2
+    D_loss = (x_real_d_loss + x_fake_d_loss) + (gp1+gp2)/2 * args.gradient_penalty_weight
     D.zero_grad()
     D_loss.backward()
     D_optimizer.step()
     return {'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
-
 
 @torch.no_grad()
 def sample(z):
@@ -202,4 +201,5 @@ if __name__ == '__main__':
 	    # save checkpoint
 	    if (ep+1)%5==0:
 	        torch.save(G.state_dict(), ckpt_dir+'/Epoch_G_(%d).pth' % ep)
-	        torch.save(D.state_dict(), ckpt_dir+'/Epoch_D_(%d).pth' % ep)
+	        torch.save(D1.state_dict(), ckpt_dir+'/Epoch_D_(%d).pth' % ep)
+	        torch.save(D2.state_dict(), ckpt_dir+'/Epoch_D_(%d).pth' % ep)
