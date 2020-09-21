@@ -195,13 +195,13 @@ if __name__ == '__main__':
 	                writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
 	        # sample
 	        #if it_g % 100 == 0:
-	    if (ep+1)%5==0:
+	    if (ep+1)%10==0:
 	        #x_fake = (sample(z)+1)/2
 	        with torch.no_grad():
 	            x_fake = sample(z)
 	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
 	    # save checkpoint
-	    if (ep+1)%5==0:
+	    if (ep+1)%10==0:
 	        torch.save(G.state_dict(), ckpt_dir+'/Epoch_G_(%d).pth' % ep)
 	        torch.save(D1.state_dict(), ckpt_dir+'/Epoch_D_(%d).pth' % ep)
 	        torch.save(D2.state_dict(), ckpt_dir+'/Epoch_D_(%d).pth' % ep)
