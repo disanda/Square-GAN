@@ -134,7 +134,8 @@ def train_D(x_real):
     gp2 = g_penal.gradient_penalty(functools.partial(D2), x_real, x_fake, gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
     gp = gp1 + gp2
     D_loss = (x_real_d_loss + x_fake_d_loss) + (gp1+gp2)/2 * args.gradient_penalty_weight
-    D.zero_grad()
+    D1.zero_grad()
+    D2.zero_grad()
     D_loss.backward()
     D_optimizer.step()
     return {'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
