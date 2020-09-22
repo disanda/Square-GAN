@@ -86,54 +86,11 @@ D = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, nor
 
 # adversarial_loss_functions
 d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss_mode)
+d_loss_fn_2,g_loss_fn_2 = loss_func.get_hinge_v2_05_losses_fn()
 
 # optimizer
 G_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
 D_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
-
-
-# ==============================================================================
-# =                                 train step                                 =
-# ==============================================================================
-
-def train_G():
-    G.train()
-    D.train()
-
-    z = torch.randn(args.batch_size, args.z_dim, 1, 1).to(device)
-    x_fake = G(z)
-
-    x_fake_d_logit = D(x_fake)
-    G_loss = g_loss_fn(x_fake_d_logit)
-
-    G.zero_grad()
-    G_loss.backward()
-    G_optimizer.step()
-
-    return {'g_loss': G_loss}
-
-
-def train_D(x_real):
-    G.train()
-    D.train()
-
-    z = torch.randn(args.batch_size, args.z_dim, 1, 1).to(device)
-    x_fake = G(z).detach()
-
-    x_real_d_logit = D(x_real)
-    x_fake_d_logit = D(x_fake)
-
-    x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
-    gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake, gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
-
-    D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
-
-    D.zero_grad()
-    D_loss.backward()
-    D_optimizer.step()
-
-    return {'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
-
 
 @torch.no_grad()
 def sample(z):
@@ -171,24 +128,52 @@ if __name__ == '__main__':
 	writer = tensorboardX.SummaryWriter(os.path.join(output_dir, 'summaries'))
 	z = torch.randn(64, args.z_dim, 1, 1).to(device)  # a fixed noise for sampling
 
+	G.train()
+	D.train()
 	for ep in tqdm.trange(args.epochs, desc='Epoch Loop'):
 	    it_d, it_g = 0, 0
 	    #for x_real,flag in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
 	    for x_real in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
-	        #print(x_real.shape)
 	        x_real = x_real.to(device)
-	        D_loss_dict = train_D(x_real)
+	        z = torch.randn(args.batch_size, args.z_dim, 1, 1).to(device)
+
+#--------training D-----------
+	        x_fake = G(z)
+	        x_real_d_logit = D(x_real)
+	        x_fake_d_logit = D(x_fake.detach())
+
+	        if ep < 1000:
+	            x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
+	        else:
+	            x_real_d_loss, x_fake_d_loss = d_loss_fn_2(x_real_d_logit, x_fake_d_logit)
+
+	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
+	        D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
+	        D.zero_grad()
+	        D_loss.backward()
+	        D_optimizer.step()
+	        D_loss_dict={'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
+
 	        it_d += 1
 	        for k, v in D_loss_dict.items():
 	            writer.add_scalar('D/%s' % k, v.data.cpu().numpy(), global_step=it_d)
 
-	        if it_d % args.n_d == 0:
-	            G_loss_dict = train_G()
-	            it_g += 1
-	            for k, v in G_loss_dict.items():
-	                writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
-	        # sample
-	        #if it_g % 100 == 0:
+#-----------training G-----------
+	        x_fake_d_logit = D(x_fake)
+	        if ep < 1000:
+	            G_loss = g_loss_fn(x_fake_d_logit)
+	        else 
+	            G_loss = g_loss_fn_2(x_fake_d_logit)
+	        G.zero_grad()
+	        G_loss.backward()
+	        G_optimizer.step()
+
+	        it_g += 1
+	        G_loss_dict = {'g_loss': G_loss}
+	        for k, v in G_loss_dict.items():
+	            writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
+
+#--------------save---------------
 	    if (ep+1)%10==0:
 	        #x_fake = (sample(z)+1)/2
 	        with torch.no_grad():
