@@ -153,7 +153,7 @@ if __name__ == '__main__':
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
 	        if ep>3000:
-	        D_loss = 1/(1+0.01*ep)*D_loss
+	            D_loss = 1/(1+0.01*ep)*D_loss
 
 	        D.zero_grad()
 	        D_loss.backward()
