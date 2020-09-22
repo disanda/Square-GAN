@@ -88,6 +88,7 @@ D = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, nor
 d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss_mode)
 d_loss_fn_2,g_loss_fn_2 = loss_func.get_hinge_v2_05_losses_fn()
 d_loss_fn_3,g_loss_fn_3 = loss_func.get_hinge_v2_01_losses_fn()
+d_loss_fn_4,g_loss_fn_4 = loss_func.get_hinge_v2_002_losses_fn()
 
 # optimizer
 G_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
@@ -143,17 +144,18 @@ if __name__ == '__main__':
 	        x_real_d_logit = D(x_real)
 	        x_fake_d_logit = D(x_fake.detach())
 
-	        if ep < 1000:
+	        if ep <= 1000:
 	            x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
-	        elif ep <2000:
+	        elif ep <= 2000 & ep>1000:
 	            x_real_d_loss, x_fake_d_loss = d_loss_fn_2(x_real_d_logit, x_fake_d_logit)
-	        else:
+	        elif ep <= 3000 & ep >2000:
 	            x_real_d_loss, x_fake_d_loss = d_loss_fn_3(x_real_d_logit, x_fake_d_logit)
+	        else:
+	            x_real_d_loss, x_fake_d_loss = d_loss_fn_4(x_real_d_logit, x_fake_d_logit)
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
-	        if ep>3000:
-	            D_loss = 1/(1+0.01*ep)*D_loss
+	        D_loss = 1/(1+0.01*ep)*D_loss
 
 	        D.zero_grad()
 	        D_loss.backward()
