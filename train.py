@@ -177,7 +177,8 @@ if __name__ == '__main__':
 	    if (ep+1)%10==0:
 	        #x_fake = (sample(z)+1)/2
 	        with torch.no_grad():
-	            x_fake = sample(z)
+	        	z_t = torch.randn(64, args.z_dim, 1, 1).to(device)
+	            x_fake = sample(z_t)
 	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
 	    # save checkpoint
 	    if (ep+1)%10==0:
