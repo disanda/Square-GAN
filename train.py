@@ -162,7 +162,7 @@ if __name__ == '__main__':
 	        x_fake_d_logit = D(x_fake)
 	        if ep < 1000:
 	            G_loss = g_loss_fn(x_fake_d_logit)
-	        else 
+	        else:
 	            G_loss = g_loss_fn_2(x_fake_d_logit)
 	        G.zero_grad()
 	        G_loss.backward()
