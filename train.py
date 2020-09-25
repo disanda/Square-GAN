@@ -147,11 +147,11 @@ if __name__ == '__main__':
 
 	        if ep <= 1000:
 	            x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
-	        elif ep <= 2000 & ep>1000:
+	        elif ep <= 3000 & ep>1000:
 	            x_real_d_loss, x_fake_d_loss = d_loss_fn_2(x_real_d_logit, x_fake_d_logit)
-	        elif ep <= 3000 & ep >2000:
+	        elif ep <= 6000 & ep >3000:
 	            x_real_d_loss, x_fake_d_loss = d_loss_fn_3(x_real_d_logit, x_fake_d_logit)
-	        elif ep <= 4000 & ep >3000:
+	        elif ep <= 9000 & ep >6000:
 	            x_real_d_loss, x_fake_d_loss = d_loss_fn_4(x_real_d_logit, x_fake_d_logit)
 	        else:
 	            x_real_d_loss, x_fake_d_loss = d_loss_fn_5(x_real_d_logit, x_fake_d_logit)
