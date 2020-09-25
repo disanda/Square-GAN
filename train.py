@@ -33,7 +33,7 @@ parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['
 parser.add_argument('--gradient_penalty_weight', type=float, default=10.0)
 parser.add_argument('--experiment_name', default='none')
 parser.add_argument('--gradient_penalty_d_norm', default='layer_norm', choices=['instance_norm', 'layer_norm'])  # !!!
-parser.add_argument('--img_size',type=int,default=64)
+parser.add_argument('--img_size',type=int,default=256)
 args = parser.parse_args()
 
 # output_dir
@@ -59,7 +59,7 @@ with open(os.path.join(output_dir, 'settings.yml'), "w", encoding="utf-8") as f:
 use_gpu = torch.cuda.is_available()
 device = torch.device("cuda" if use_gpu else "cpu")
 
-# setup dataset
+# ----------------setup dataset-------------------
 
 if args.dataset in ['cifar10', 'fashion_mnist', 'mnist','pose10']:  # 3: 32x32  4:64:64
     data_loader, shape = data.make_dataset(args.dataset, args.batch_size,args.img_size,pin_memory=use_gpu)

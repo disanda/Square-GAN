@@ -83,3 +83,5 @@ python train.py --dataset=pose10 --epoch=5000 --adversarial_loss_mode=hinge_v2 -
 #1000次ep后loss衰减
 
 python train.py --dataset=pose10 --epoch=5000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-04-PG_loss_v5
+
+python train.py --dataset=pose10 --epoch=5000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-04-PG_loss_size_256
