@@ -33,7 +33,7 @@ parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['
 parser.add_argument('--gradient_penalty_weight', type=float, default=10.0)
 parser.add_argument('--experiment_name', default='none')
 parser.add_argument('--gradient_penalty_d_norm', default='layer_norm', choices=['instance_norm', 'layer_norm'])  # !!!
-parser.add_argument('--img_size',type=int,default=256)
+parser.add_argument('--img_size',type=int,default=64)
 args = parser.parse_args()
 
 # output_dir
