@@ -154,7 +154,7 @@ if __name__ == '__main__':
 	             x_real_d_loss, x_fake_d_loss = d_loss_fn_3(x_real_d_logit, x_fake_d_logit)
 	        elif ep <= 4000 & ep >3000:
 	             x_real_d_loss, x_fake_d_loss = d_loss_fn_4(x_real_d_logit, x_fake_d_logit)
-	         else:
+	        else:
 	             x_real_d_loss, x_fake_d_loss = d_loss_fn_5(x_real_d_logit, x_fake_d_logit)
 	        x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
 
