@@ -63,7 +63,7 @@ device = torch.device("cuda" if use_gpu else "cpu")
 
 if args.dataset in ['cifar10', 'fashion_mnist', 'mnist','pose10']:  # 3: 32x32  4:64:64 5:128 6:256
     data_loader, shape = data.make_dataset(args.dataset, args.batch_size,args.img_size,pin_memory=use_gpu)
-    n_G_upsamplings = n_D_downsamplings = 6
+    n_G_upsamplings = n_D_downsamplings = 4
 
 
 
