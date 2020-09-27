@@ -98,8 +98,8 @@ def get_hinge_v2_1():
 
 def get_hinge_v2_2():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.49- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.49+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(1- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(1+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -108,8 +108,8 @@ def get_hinge_v2_2():
 
 def get_hinge_v2_3():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.48- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.48+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(2- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(2+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -118,8 +118,8 @@ def get_hinge_v2_3():
 
 def get_hinge_v2_4():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.47- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.47+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(3- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(3+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -128,8 +128,8 @@ def get_hinge_v2_4():
 
 def get_hinge_v2_5():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.46- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.46+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(4- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(4+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -207,7 +207,7 @@ if __name__ == '__main__':
 	             x_real_d_loss, x_fake_d_loss = d_loss_fn_4(x_real_d_logit, x_fake_d_logit)
 	        else:
 	             x_real_d_loss, x_fake_d_loss = d_loss_fn_5(x_real_d_logit, x_fake_d_logit)
-	        x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
+	        #x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
