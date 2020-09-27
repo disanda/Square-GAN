@@ -137,11 +137,11 @@ def get_hinge_v2_5():
     return d_loss_fn, g_loss_fn
 
 # adversarial_loss_functions
-d_loss_fn_1, g_loss_fn_1 = loss_func.get_hinge_v2_1()
-d_loss_fn_2,g_loss_fn_2 = loss_func.get_hinge_v2_2()
-d_loss_fn_3,g_loss_fn_3 = loss_func.get_hinge_v2_3()
-d_loss_fn_4,g_loss_fn_4 = loss_func.get_hinge_v2_4()
-d_loss_fn_5,g_loss_fn_5 = loss_func.get_hinge_v2_5()
+d_loss_fn_1, g_loss_fn_1 = get_hinge_v2_1()
+d_loss_fn_2,g_loss_fn_2 = get_hinge_v2_2()
+d_loss_fn_3,g_loss_fn_3 = get_hinge_v2_3()
+d_loss_fn_4,g_loss_fn_4 = get_hinge_v2_4()
+d_loss_fn_5,g_loss_fn_5 = get_hinge_v2_5()
 
 # optimizer
 G_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
