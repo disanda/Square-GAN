@@ -84,13 +84,64 @@ D = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, nor
 #print(G)
 #print(D)
 
+
+def get_hinge_v2_1():
+    def d_loss_fn(r_logit, f_logit):
+        r_loss = torch.max(0.5- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(0.5+ f_logit, torch.zeros_like(f_logit)).mean()
+        return r_loss, f_loss
+    def g_loss_fn(f_logit):
+        f_loss = -f_logit.mean()
+        return f_loss
+    return d_loss_fn, g_loss_fn
+
+
+def get_hinge_v2_2():
+    def d_loss_fn(r_logit, f_logit):
+        r_loss = torch.max(0.49- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(0.49+ f_logit, torch.zeros_like(f_logit)).mean()
+        return r_loss, f_loss
+    def g_loss_fn(f_logit):
+        f_loss = -f_logit.mean()
+        return f_loss
+    return d_loss_fn, g_loss_fn
+
+def get_hinge_v2_3():
+    def d_loss_fn(r_logit, f_logit):
+        r_loss = torch.max(0.48- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(0.48+ f_logit, torch.zeros_like(f_logit)).mean()
+        return r_loss, f_loss
+    def g_loss_fn(f_logit):
+        f_loss = -f_logit.mean()
+        return f_loss
+    return d_loss_fn, g_loss_fn
+
+def get_hinge_v2_4():
+    def d_loss_fn(r_logit, f_logit):
+        r_loss = torch.max(0.47- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(0.47+ f_logit, torch.zeros_like(f_logit)).mean()
+        return r_loss, f_loss
+    def g_loss_fn(f_logit):
+        f_loss = -f_logit.mean()
+        return f_loss
+    return d_loss_fn, g_loss_fn
+
+def get_hinge_v2_5():
+    def d_loss_fn(r_logit, f_logit):
+        r_loss = torch.max(0.46- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(0.46+ f_logit, torch.zeros_like(f_logit)).mean()
+        return r_loss, f_loss
+    def g_loss_fn(f_logit):
+        f_loss = -f_logit.mean()
+        return f_loss
+    return d_loss_fn, g_loss_fn
+
 # adversarial_loss_functions
-d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss_mode)
-d_loss_fn_1, g_loss_fn_1 = loss_func.get_hinge_v2_1_losses_fn()
-d_loss_fn_2,g_loss_fn_2 = loss_func.get_hinge_v2_05_losses_fn()
-d_loss_fn_3,g_loss_fn_3 = loss_func.get_hinge_v2_01_losses_fn()
-d_loss_fn_4,g_loss_fn_4 = loss_func.get_hinge_v2_002_losses_fn()
-d_loss_fn_5,g_loss_fn_5 = loss_func.get_hinge_v2_0004_losses_fn()
+d_loss_fn_1, g_loss_fn_1 = loss_func.get_hinge_v2_1()
+d_loss_fn_2,g_loss_fn_2 = loss_func.get_hinge_v2_2()
+d_loss_fn_3,g_loss_fn_3 = loss_func.get_hinge_v2_3()
+d_loss_fn_4,g_loss_fn_4 = loss_func.get_hinge_v2_4()
+d_loss_fn_5,g_loss_fn_5 = loss_func.get_hinge_v2_5()
 
 # optimizer
 G_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
@@ -134,7 +185,7 @@ if __name__ == '__main__':
 
 	G.train()
 	D.train()
-	for ep in tqdm.trange(args.epochs, desc='Epoch Loop'):
+	for ep in tqdm.trange(args.epochs+1, desc='Epoch Loop'):
 	    it_d, it_g = 0, 0
 	    #for x_real,flag in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
 	    for x_real in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
@@ -184,13 +235,13 @@ if __name__ == '__main__':
 	            writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
 
 #--------------save---------------
-	    if (ep+1)%10==0:
+	    if ep%10==0:
 	        #x_fake = (sample(z)+1)/2
 	        with torch.no_grad():
 	            z_t = torch.randn(64, args.z_dim, 1, 1).to(device)
 	            x_fake = sample(z_t)
 	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
 	    # save checkpoint
-	    if (ep+1)%10==0:
+	    if ep%10==0:
 	        torch.save(G.state_dict(), ckpt_dir+'/Epoch_G_(%d).pth' % ep)
 	        torch.save(D.state_dict(), ckpt_dir+'/Epoch_D_(%d).pth' % ep)
