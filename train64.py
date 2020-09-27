@@ -136,6 +136,10 @@ def get_hinge_v2_5():
         return f_loss
     return d_loss_fn, g_loss_fn
 
+def g_loss_fn(f_logit):
+        f_loss = -f_logit.mean()
+    return f_loss
+
 # adversarial_loss_functions
 d_loss_fn_1, g_loss_fn_1 = get_hinge_v2_1()
 d_loss_fn_2,g_loss_fn_2 = get_hinge_v2_2()
@@ -242,6 +246,6 @@ if __name__ == '__main__':
 	            x_fake = sample(z_t)
 	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
 	    # save checkpoint
-	    if ep%10==0:
+	    if ep%100==0:
 	        torch.save(G.state_dict(), ckpt_dir+'/Epoch_G_(%d).pth' % ep)
 	        torch.save(D.state_dict(), ckpt_dir+'/Epoch_D_(%d).pth' % ep)
