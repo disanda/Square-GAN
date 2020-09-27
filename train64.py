@@ -87,8 +87,8 @@ D = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, nor
 
 def get_hinge_v2_1():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.5- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.5+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(5- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(5+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -98,8 +98,8 @@ def get_hinge_v2_1():
 
 def get_hinge_v2_2():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.45- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.45+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(4.5- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(4.5+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -108,8 +108,8 @@ def get_hinge_v2_2():
 
 def get_hinge_v2_3():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.4- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.4+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(4- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(4+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -118,8 +118,8 @@ def get_hinge_v2_3():
 
 def get_hinge_v2_4():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.35- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.35+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(3.5- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(3.5+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -128,8 +128,8 @@ def get_hinge_v2_4():
 
 def get_hinge_v2_5():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.3- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.3+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(3- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(3+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
