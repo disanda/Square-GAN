@@ -137,7 +137,7 @@ def get_hinge_v2_5():
     return d_loss_fn, g_loss_fn
 
 def g_loss_fn(f_logit):
-        f_loss = -f_logit.mean()
+    f_loss = -f_logit.mean()
     return f_loss
 
 # adversarial_loss_functions
