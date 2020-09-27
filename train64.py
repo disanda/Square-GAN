@@ -160,7 +160,7 @@ if __name__ == '__main__':
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
-	        D_loss = 1/(1+0.005*ep)*D_loss # 渐进式GP!
+	        #D_loss = 1/(1+0.01*ep)*D_loss # 渐进式GP!
 
 	        D.zero_grad()
 	        D_loss.backward()
@@ -174,7 +174,7 @@ if __name__ == '__main__':
 #-----------training G-----------
 	        x_fake_d_logit = D(x_fake)
 	        G_loss = g_loss_fn(x_fake_d_logit) #渐进式loss
-	        G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
+	        #G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
 	        G.zero_grad()
 	        G_loss.backward()
 	        G_optimizer.step()

@@ -53,8 +53,8 @@ def get_hinge_v2_1_losses_fn():
 
 def get_hinge_v2_05_losses_fn():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.4- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.4+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(1- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(1+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -63,8 +63,8 @@ def get_hinge_v2_05_losses_fn():
 
 def get_hinge_v2_01_losses_fn():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.3- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.3+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(2- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(2+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -73,8 +73,8 @@ def get_hinge_v2_01_losses_fn():
 
 def get_hinge_v2_002_losses_fn():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.2- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.2+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(3- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(3+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -83,8 +83,8 @@ def get_hinge_v2_002_losses_fn():
 
 def get_hinge_v2_0004_losses_fn():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.1- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.1+ f_logit, torch.zeros_like(f_logit)).mean()
+        r_loss = torch.max(4- r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(4+ f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
