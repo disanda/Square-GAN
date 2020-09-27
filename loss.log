@@ -86,7 +86,7 @@ python train64.py --dataset=pose10 --epoch=6000 --adversarial_loss_mode=hinge_v2
 
 python train128.py --dataset=pose10 --epoch=6000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-04-PG_loss_v5_128
 
-python train128.py --dataset=pose10 --epoch=6000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-04-PG_loss_v5_32
+python train32.py --dataset=pose10 --epoch=6000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-04-PG_loss_v5_32
 
 python train.py --dataset=pose10 --epoch=5000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-04-PG_loss_size_256
 
