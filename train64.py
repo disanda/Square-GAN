@@ -148,8 +148,8 @@ d_loss_fn_4,g_loss_fn_4 = get_hinge_v2_4()
 d_loss_fn_5,g_loss_fn_5 = get_hinge_v2_5()
 
 # optimizer
-G_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002, betas=(0.75, 0.75)) #一阶当前，二阶历史总和
-D_optimizer = torch.optim.Adam(D.parameters(), lr=0.0002, betas=(0.75, 0.75))
+G_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002, betas=(0.80, 0.99)) #一阶当前，二阶历史总和
+D_optimizer = torch.optim.Adam(D.parameters(), lr=0.0002, betas=(0.80, 0.99))
 
 #G_optimizer = torch.optim.SGD(G.parameters(), lr=0.0001, momentum=0.9)
 #D_optimizer = torch.optim.SGD(D.parameters(), lr=0.0001, momentum=0.9)
