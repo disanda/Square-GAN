@@ -98,16 +98,6 @@ def get_hinge_v2_1():
 
 def get_hinge_v2_2():
     def d_loss_fn(r_logit, f_logit):
-        r_loss = torch.max(0.5- r_logit, torch.zeros_like(r_logit)).mean()
-        f_loss = torch.max(0.5+ f_logit, torch.zeros_like(f_logit)).mean()
-        return r_loss, f_loss
-    def g_loss_fn(f_logit):
-        f_loss = -f_logit.mean()
-        return f_loss
-    return d_loss_fn, g_loss_fn
-
-def get_hinge_v2_3():
-    def d_loss_fn(r_logit, f_logit):
         r_loss = torch.max(0.5- 0.5*r_logit, torch.zeros_like(r_logit)).mean()
         f_loss = torch.max(0.5+ 0.5*f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
@@ -116,7 +106,7 @@ def get_hinge_v2_3():
         return f_loss
     return d_loss_fn, g_loss_fn
 
-def get_hinge_v2_4():
+def get_hinge_v2_3():
     def d_loss_fn(r_logit, f_logit):
         r_loss = torch.max(0.5- 0.25*r_logit, torch.zeros_like(r_logit)).mean()
         f_loss = torch.max(0.5+ 0.25*f_logit, torch.zeros_like(f_logit)).mean()
@@ -126,10 +116,20 @@ def get_hinge_v2_4():
         return f_loss
     return d_loss_fn, g_loss_fn
 
-def get_hinge_v2_5():
+def get_hinge_v2_4():
     def d_loss_fn(r_logit, f_logit):
         r_loss = torch.max(0.5- 0.125*r_logit, torch.zeros_like(r_logit)).mean()
         f_loss = torch.max(0.5+ 0.125*f_logit, torch.zeros_like(f_logit)).mean()
+        return r_loss, f_loss
+    def g_loss_fn(f_logit):
+        f_loss = -f_logit.mean()
+        return f_loss
+    return d_loss_fn, g_loss_fn
+
+def get_hinge_v2_5():
+    def d_loss_fn(r_logit, f_logit):
+        r_loss = torch.max(0.5- 0.0625*r_logit, torch.zeros_like(r_logit)).mean()
+        f_loss = torch.max(0.5+ 0.0625*f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = -f_logit.mean()
@@ -148,8 +148,8 @@ d_loss_fn_4,g_loss_fn_4 = get_hinge_v2_4()
 d_loss_fn_5,g_loss_fn_5 = get_hinge_v2_5()
 
 # optimizer
-G_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002, betas=(0.25, 0.99)) #一阶当前，二阶历史总和
-D_optimizer = torch.optim.Adam(D.parameters(), lr=0.0002, betas=(0.25, 0.99))
+G_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002, betas=(0.75, 0.75)) #一阶当前，二阶历史总和
+D_optimizer = torch.optim.Adam(D.parameters(), lr=0.0002, betas=(0.75, 0.75))
 
 #G_optimizer = torch.optim.SGD(G.parameters(), lr=0.0001, momentum=0.9)
 #D_optimizer = torch.optim.SGD(D.parameters(), lr=0.0001, momentum=0.9)
