@@ -148,8 +148,8 @@ d_loss_fn_4,g_loss_fn_4 = get_hinge_v2_4()
 d_loss_fn_5,g_loss_fn_5 = get_hinge_v2_5()
 
 # optimizer
-G_optimizer = torch.optim.Adam(G.parameters(), lr=0.0001, betas=(0.5, 0.5))
-D_optimizer = torch.optim.Adam(D.parameters(), lr=0.0001, betas=(0.5, 0.5))
+G_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.95))
+D_optimizer = torch.optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.95))
 
 #G_optimizer = torch.optim.SGD(G.parameters(), lr=0.0001, momentum=0.9)
 #D_optimizer = torch.optim.SGD(D.parameters(), lr=0.0001, momentum=0.9)
@@ -222,7 +222,7 @@ if __name__ == '__main__':
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
-	        #D_loss = 1/(1+0.01*ep)*D_loss # 渐进式GP!
+	        D_loss = 1/(1+0.001*ep)*D_loss # 渐进式GP!
 
 	        D.zero_grad()
 	        D_loss.backward()
@@ -236,7 +236,7 @@ if __name__ == '__main__':
 #-----------training G-----------
 	        x_fake_d_logit = D(x_fake)
 	        G_loss = g_loss_fn(x_fake_d_logit) #渐进式loss
-	        #G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
+	        G_loss = 1/(1+ep*0.001)*g_loss_fn(x_fake_d_logit) #渐进式loss
 	        G.zero_grad()
 	        G_loss.backward()
 	        G_optimizer.step()
