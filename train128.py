@@ -98,7 +98,8 @@ def get_losses_fn():
         return f_loss
     return d_loss_fn, g_loss_fn
 
-d_loss_fn, g_loss_fn = get_losses_fn()
+#d_loss_fn, g_loss_fn = get_losses_fn()
+d_loss_fn, g_loss_fn = loss_func.get_hinge_v1_losses_fn()
 
 # optimizer
 G_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.999))
