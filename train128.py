@@ -182,7 +182,7 @@ if __name__ == '__main__':
 
 #--------------save---------------
 	        #x_fake = (sample(z)+1)/2
-	        if it_g%100==0:
+	        if it_g%50==0:
 	            with torch.no_grad():
 	                z_t = torch.randn(64, args.z_dim, 1, 1).to(device)
 	                x_fake = sample(z_t)
