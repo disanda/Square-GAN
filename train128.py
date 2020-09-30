@@ -181,12 +181,12 @@ if __name__ == '__main__':
 	            writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
 
 #--------------save---------------
-	    if (ep+1)%10==0:
+	        if (it_g+1)%1000==0:
 	        #x_fake = (sample(z)+1)/2
-	        with torch.no_grad():
-	            z_t = torch.randn(64, args.z_dim, 1, 1).to(device)
-	            x_fake = sample(z_t)
-	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
+	            with torch.no_grad():
+	                z_t = torch.randn(64, args.z_dim, 1, 1).to(device)
+	                x_fake = sample(z_t)
+	                torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
 	    # save checkpoint
 	    if (ep+1)%10==0:
 	        torch.save(G.state_dict(), ckpt_dir+'/Epoch_G_(%d).pth' % ep)
