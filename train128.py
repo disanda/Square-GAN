@@ -88,13 +88,13 @@ D = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, nor
 def get_losses_fn():
     def d_loss_fn(r_logit, f_logit):
         r_loss = torch.max(1 - r_logit, torch.zeros_like(r_logit)).mean()
-        r_loss = r_loss**2
+        r_loss = r_loss+r_loss**2
         f_loss = torch.max(1 + f_logit, torch.zeros_like(f_logit)).mean()
-        f_loss = f_loss**2
+        f_loss = f_loss+f_loss**2
         return r_loss, f_loss
     def g_loss_fn(f_logit):
         f_loss = torch.max(1 - f_logit, torch.zeros_like(f_logit)).mean()
-        f_loss = f_loss**2
+        f_loss = f_loss+f_loss**2
         return f_loss
     return d_loss_fn, g_loss_fn
 
