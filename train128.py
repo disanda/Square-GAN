@@ -181,7 +181,7 @@ if __name__ == '__main__':
 	            writer.add_scalar('G/%s' % k, v.data.cpu().numpy(), global_step=it_g)
 
 #--------------save---------------
-	        if (it_g+1)%1000==0:
+	        if (it_g+1)%200==0:
 	        #x_fake = (sample(z)+1)/2
 	            with torch.no_grad():
 	                z_t = torch.randn(64, args.z_dim, 1, 1).to(device)
