@@ -85,16 +85,24 @@ D = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, nor
 #print(D)
 
 # adversarial_loss_functions
-d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss_mode)
-d_loss_fn_1, g_loss_fn_1 = loss_func.get_hinge_v2_1_losses_fn()
-d_loss_fn_2,g_loss_fn_2 = loss_func.get_hinge_v2_05_losses_fn()
-d_loss_fn_3,g_loss_fn_3 = loss_func.get_hinge_v2_01_losses_fn()
-d_loss_fn_4,g_loss_fn_4 = loss_func.get_hinge_v2_002_losses_fn()
-d_loss_fn_5,g_loss_fn_5 = loss_func.get_hinge_v2_0004_losses_fn()
+def get_losses_fn():
+    def d_loss_fn(r_logit, f_logit):
+        r_loss = torch.max(1 - r_logit, torch.zeros_like(r_logit)).mean()
+        r_loss = r_loss**2
+        f_loss = torch.max(1 + f_logit, torch.zeros_like(f_logit)).mean()
+        f_loss = f_loss**2
+        return r_loss, f_loss
+    def g_loss_fn(f_logit):
+        f_loss = torch.max(1 - f_logit, torch.zeros_like(f_logit)).mean()
+        f_loss = f_loss**2
+        return f_loss
+    return d_loss_fn, g_loss_fn
+
+d_loss_fn, g_loss_fn = get_losses_fn()
 
 # optimizer
-G_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
-D_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
+G_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002, betas=(0.5, 0.999))
+D_optimizer = torch.optim.Adam(D.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
 @torch.no_grad()
 def sample(z):
@@ -145,17 +153,6 @@ if __name__ == '__main__':
 	        x_fake = G(z)
 	        x_real_d_logit = D(x_real)
 	        x_fake_d_logit = D(x_fake.detach())
-
-	        if ep <= 1000:
-	             x_real_d_loss, x_fake_d_loss = d_loss_fn_1(x_real_d_logit, x_fake_d_logit)
-	        elif ep <= 2000 & ep>1000:
-	             x_real_d_loss, x_fake_d_loss = d_loss_fn_2(x_real_d_logit, x_fake_d_logit)
-	        elif ep <= 3000 & ep >2000:
-	             x_real_d_loss, x_fake_d_loss = d_loss_fn_3(x_real_d_logit, x_fake_d_logit)
-	        elif ep <= 4000 & ep >3000:
-	             x_real_d_loss, x_fake_d_loss = d_loss_fn_4(x_real_d_logit, x_fake_d_logit)
-	        else:
-	             x_real_d_loss, x_fake_d_loss = d_loss_fn_5(x_real_d_logit, x_fake_d_logit)
 	        x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)

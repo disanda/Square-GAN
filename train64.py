@@ -102,7 +102,7 @@ def get_hinge_v2_2():
         f_loss = torch.max(0.5+ 0.5*f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
-        f_loss = -f_logit.mean()
+        f_loss = -0.5*f_logit.mean()
         return f_loss
     return d_loss_fn, g_loss_fn
 
@@ -112,7 +112,7 @@ def get_hinge_v2_3():
         f_loss = torch.max(0.5+ 0.25*f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
-        f_loss = -f_logit.mean()
+        f_loss = -0.25*f_logit.mean()
         return f_loss
     return d_loss_fn, g_loss_fn
 
@@ -122,7 +122,7 @@ def get_hinge_v2_4():
         f_loss = torch.max(0.5+ 0.125*f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
-        f_loss = -f_logit.mean()
+        f_loss = -0.125*f_logit.mean()
         return f_loss
     return d_loss_fn, g_loss_fn
 
@@ -132,7 +132,7 @@ def get_hinge_v2_5():
         f_loss = torch.max(0.5+ 0.0625*f_logit, torch.zeros_like(f_logit)).mean()
         return r_loss, f_loss
     def g_loss_fn(f_logit):
-        f_loss = -f_logit.mean()
+        f_loss = -0.0625*f_logit.mean()
         return f_loss
     return d_loss_fn, g_loss_fn
 
