@@ -145,7 +145,7 @@ if __name__ == '__main__':
 	for ep in tqdm.trange(args.epochs, desc='Epoch Loop'):
 	    it_d, it_g = 0, 0
 	    #for x_real,flag in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
-	    for x_real in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
+	    for x_real,_ in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
 	        x_real = x_real.to(device)
 	        z = torch.randn(args.batch_size, args.z_dim, 1, 1).to(device)
 
