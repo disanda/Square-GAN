@@ -69,7 +69,8 @@ def make_dataset(dataset_name, batch_size,img_size,drop_remainder=True, shuffle=
             transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
             #transforms.ToPILImage()
             ])
-        dataset = DatasetFromFolder(path='',size=64)
+        path_128 = '/home/disanda/Desktop/dataset/celeba-hq-download/celeba-128'
+        dataset = DatasetFromFolder(path=path_128,size=64)
         img_shape = (img_size, img_size, 3)
     else:
         raise NotImplementedError
