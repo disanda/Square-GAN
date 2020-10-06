@@ -1,5 +1,5 @@
 #---------------------- celeba 128 --------------------
-python train_celeba128.py --dataset=celeba_128 --experiment_name=hingv2_spectral_norm_celeba128
+python train_celeba128.py --experiment_name=hingv2_spectral_norm_celeba128
 
 
 
