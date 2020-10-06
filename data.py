@@ -5,17 +5,19 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import datasets, transforms
 
 class DatasetFromFolder(Dataset):
-    def __init__(self,path='',size=32):
+    def __init__(self,path='',transform=None):
         super().__init__()
         self.path = path
-        self.size = size
+        self.transform = transform
         self.image_filenames = [x for x in os.listdir(self.path) if x.endswith('jpg') or x.endswith('png')] # x.startswith() 
         #imgs_path = os.listdir(path)
         #self.image_filenames = list(filter(lambda x:x.endswith('jpg') or x.endswith('png') ,imgs_path))
     def __getitem__(self, index):
         a = Image.open(os.path.join(self.path, self.image_filenames[index])).convert('L')
-        a = a.resize((self.size, self.size), Image.BICUBIC)
-        a = transforms.ToTensor()(a)
+        #a = a.resize((self.size, self.size), Image.BICUBIC)
+        #a = transforms.ToTensor()(a)
+        if self.transform:
+            a = self.transform(a)
         return a
     def __len__(self):
         return len(self.image_filenames)
@@ -70,7 +72,7 @@ def make_dataset(dataset_name, batch_size,img_size,drop_remainder=True, shuffle=
             #transforms.ToPILImage()
             ])
         path_128 = '/home/disanda/Desktop/dataSet/celeba-hq-download/celeba-128'
-        dataset = DatasetFromFolder(path=path_128,size=64)
+        dataset = DatasetFromFolder(path=path_128,transform)
         img_shape = (img_size, img_size, 3)
     else:
         raise NotImplementedError
