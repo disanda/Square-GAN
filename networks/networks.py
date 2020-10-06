@@ -13,6 +13,8 @@ def _get_norm_layer_2d(norm):
         return Identity
     elif norm == 'batch_norm':
         return nn.BatchNorm2d
+    elif norm == 'spectral_norm':
+        return nn.utils.spectral_norm
     elif norm == 'instance_norm':
         return functools.partial(nn.InstanceNorm2d, affine=True)
     elif norm == 'layer_norm':
@@ -42,7 +44,7 @@ class ConvGenerator(nn.Module):
         # 2: upsamplings, 4x4 -> 8x8 -> 16x16 -> ...
         for i in range(n_upsamplings - 1):
             d_last = d
-            d = min(dim * 2 ** (n_upsamplings - 2 - i), dim * 8)
+            d = d//2
             layers.append(dconv_norm_relu(d_last, d, kernel_size=4, stride=2, padding=1))
         layers.append(nn.ConvTranspose2d(d, output_channels, kernel_size=4, stride=2, padding=1))
         layers.append(nn.Tanh())
@@ -72,7 +74,7 @@ class ConvDiscriminator(nn.Module):
         layers.append(nn.LeakyReLU(0.2))
         for i in range(n_downsamplings - 1):
             d_last = d
-            d = min(dim * 2 ** (i + 1), dim * 8)
+            d = d*2 # 1 > 2 > 4 > 8  > 16 (64*64) > 32 > 64 >128 > 256 (1024*1024) 
             layers.append(conv_norm_lrelu(d_last, d, kernel_size=4, stride=2, padding=1))
         # 2: logit
         layers.append(nn.Conv2d(d, 1, kernel_size=4, stride=1, padding=0))
