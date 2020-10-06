@@ -163,7 +163,7 @@ if __name__ == '__main__':
 	                z_t = torch.randn(64, args.z_dim, 1, 1).to(device)
 	                x_fake = sample(z_t)
 	                torchvision.utils.save_image(x_fake,sample_dir+'/ep%d_it%d.jpg'%(ep,it_g), nrow=8)
-	                print('G_loss:'+str(G_loss)+'------'+'D_loss'+str(D_loss))_
+	                print('G_loss:'+str(G_loss)+'------'+'D_loss'+str(D_loss))
 	    # save checkpoint
 	    if (ep+1)%10==0:
 	        torch.save(G.state_dict(), ckpt_dir+'/Epoch_G_(%d).pth' % ep)
