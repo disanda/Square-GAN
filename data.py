@@ -13,7 +13,7 @@ class DatasetFromFolder(Dataset):
         #imgs_path = os.listdir(path)
         #self.image_filenames = list(filter(lambda x:x.endswith('jpg') or x.endswith('png') ,imgs_path))
     def __getitem__(self, index):
-        a = Image.open(os.path.join(self.path, self.image_filenames[index])).convert('L')
+        a = Image.open(os.path.join(self.path, self.image_filenames[index])).convert('RGB') # 'L'是灰度图
         #a = a.resize((self.size, self.size), Image.BICUBIC)
         #a = transforms.ToTensor()(a)
         if self.transform:

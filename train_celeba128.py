@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
 	# main loop
 	writer = tensorboardX.SummaryWriter(os.path.join(output_dir, 'summaries'))
-	z = torch.randn(64, args.z_dim, 1, 1).to(device)  # a fixed noise for sampling
+	z = torch.randn(32, args.z_dim, 1, 1).to(device)  # a fixed noise for sampling
 
 	G.train()
 	D.train()
