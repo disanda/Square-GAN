@@ -133,7 +133,7 @@ if __name__ == '__main__':
 
 	        D.zero_grad()
 	        D_loss.backward()
-	        #D_optimizer.step()
+	        D_optimizer.step()
 	        decayD.step()
 
 	        D_loss_dict={'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
@@ -148,7 +148,7 @@ if __name__ == '__main__':
 	        #G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
 	        G.zero_grad()
 	        G_loss.backward()
-	        #G_optimizer.step()
+	        G_optimizer.step()
 	        decayG.step()
 
 	        it_g += 1
