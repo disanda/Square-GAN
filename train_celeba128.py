@@ -81,6 +81,9 @@ d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss
 # optimizer
 G_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
 D_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
+decayG = torch.optim.lr_scheduler.ExponentialLR(G_optimizer, gamma=1)
+decayD = torch.optim.lr_scheduler.ExponentialLR(D_optimizer, gamma=1)
+
 
 @torch.no_grad()
 def sample(z):
@@ -130,7 +133,9 @@ if __name__ == '__main__':
 
 	        D.zero_grad()
 	        D_loss.backward()
-	        D_optimizer.step()
+	        #D_optimizer.step()
+	        decayD.step()
+
 	        D_loss_dict={'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
 
 	        it_d += 1
@@ -143,7 +148,9 @@ if __name__ == '__main__':
 	        #G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
 	        G.zero_grad()
 	        G_loss.backward()
-	        G_optimizer.step()
+	        #G_optimizer.step()
+	        decayG.step()
+
 	        it_g += 1
 	        G_loss_dict = {'g_loss': G_loss}
 	        for k, v in G_loss_dict.items():
@@ -155,7 +162,8 @@ if __name__ == '__main__':
 	            with torch.no_grad():
 	                z_t = torch.randn(64, args.z_dim, 1, 1).to(device)
 	                x_fake = sample(z_t)
-	                torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
+	                torchvision.utils.save_image(x_fake,sample_dir+'/ep%d_it%d.jpg'%(ep,it_g), nrow=8)
+	                print('G_loss:'+str(G_loss)+'------'+'D_loss'+str(D_loss))_
 	    # save checkpoint
 	    if (ep+1)%10==0:
 	        torch.save(G.state_dict(), ckpt_dir+'/Epoch_G_(%d).pth' % ep)
