@@ -24,6 +24,7 @@ parser.add_argument('--epochs', type=int, default=100)
 parser.add_argument('--lr', type=float, default=0.0002)
 parser.add_argument('--beta_1', type=float, default=0.5)
 parser.add_argument('--z_dim', type=int, default=128)
+parser.add_argument('--batch_size', type=int, default=32)
 parser.add_argument('--adversarial_loss_mode', default='gan', choices=['gan', 'hinge_v1', 'hinge_v2', 'lsgan', 'wgan'])
 parser.add_argument('--gradient_penalty_mode', default='none', choices=['none', '1-gp', '0-gp', 'lp'])
 parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['line', 'real', 'fake', 'dragan'])
@@ -68,7 +69,7 @@ data_loader, shape = data.make_dataset(args.dataset, args.batch_size,args.img_si
 # ==============================================================================
 
 # networks
-parser.add_argument('--dataset', default='celeba_64')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
+parser.add_argument('--dataset', default='celeba_128')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
 G = net.Generator(feature_maps=128).to(device)
 D = net.Discriminator(feature_maps=128).to(device)
 #print(G)
