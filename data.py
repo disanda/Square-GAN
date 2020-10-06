@@ -65,14 +65,14 @@ def make_dataset(dataset_name, batch_size,img_size,drop_remainder=True, shuffle=
         dataset = DatasetFromFolder(path='',size=64)
         img_shape = (img_size, img_size, 3)
     elif dataset_name == 'celeba_128':
-        transform = transforms.Compose([
+        transform_128 = transforms.Compose([
             transforms.ToTensor(),
             transforms.Resize(size=(img_size, img_size)),
             transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
             #transforms.ToPILImage()
             ])
         path_128 = '/home/disanda/Desktop/dataSet/celeba-hq-download/celeba-128'
-        dataset = DatasetFromFolder(path=path_128,transform)
+        dataset = DatasetFromFolder(path=path_128,transform=transform_128)
         img_shape = (img_size, img_size, 3)
     else:
         raise NotImplementedError
