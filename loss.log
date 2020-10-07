@@ -4,3 +4,5 @@ python train_celeba128.py --experiment_name=hingv2_spectral_norm_celeba128_lr_sc
 
 
 
+#-----------------------mnist 64 ---------------------
+python train_mnist.py --experiment_name=hingv2_mnist_spectral_norm_lr_scheduler
