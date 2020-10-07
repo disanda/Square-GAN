@@ -48,7 +48,7 @@ def make_dataset(dataset_name, batch_size,img_size,drop_remainder=True, shuffle=
             transforms.Normalize(mean=[0.5], std=[0.5])
         ])
         #dataset = DatasetFromFolder(path='/_yucheng/dataSet/pose/pose_set_10',size=img_size)
-        dataset = DatasetFromFolder(path='./data/Pose/pose_set_10',size=img_size)
+        #dataset = DatasetFromFolder(path='./data/Pose/pose_set_10',size=img_size)
         img_shape = [img_size, img_size, 1]
     elif dataset_name == 'celeba_64':
         crop_size = 108
@@ -70,8 +70,8 @@ def make_dataset(dataset_name, batch_size,img_size,drop_remainder=True, shuffle=
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
             ])
-        #path_128 = '/home/disanda/Desktop/dataSet/celeba-hq-download/celeba-128'
-        path_128 = '/_yucheng/dataSet/CelebAMask-HQ/CelebAMask-HQ/CelebA-HQ-img'
+        path_128 = '/home/disanda/Desktop/dataSet/celeba-hq-download/celeba-128'
+        #path_128 = '/_yucheng/dataSet/CelebAMask-HQ/CelebAMask-HQ/CelebA-HQ-img'
         dataset = DatasetFromFolder(path=path_128,transform=transform_128)
         img_shape = (img_size, img_size, 3)
     else:
