@@ -44,6 +44,38 @@ class Discriminator(nn.Module):
         bias_flag = False
 
         # 1:
+        layers.append(nn.Conv2d(input_channels, feature_maps, kernel_size=4, stride=2, padding=1, bias=bias_flag))
+        layers.append(nn.LeakyReLU(0.2, inplace=True))
+        x1 = x1 // 2
+
+        # 2: 64*64 > 4*4
+        while x1>4:  
+            layers.append(nn.Conv2d(feature_maps*x2, feature_maps*x2*2, kernel_size=4, stride=2, padding=1, bias=bias_flag))
+            layers.append(nn.BatchNorm2d(feature_maps*x2*2))
+            layers.append(nn.LeakyReLU(0.2, inplace=True))
+            x1 = x1 // 2
+            x2 = x2 * 2
+
+        # 3: 4*4 > 1*1
+        layers.append(nn.Conv2d(feature_maps*x2, 1, kernel_size=4, stride=1, padding=0))
+        layers.append(nn.Sigmoid())
+
+        # all:
+        self.net = nn.Sequential(*layers)
+
+    def forward(self, x):
+        y = self.net(x)
+        return y # [1,1,1,1]
+
+class Discriminator_SpectrualNorm(nn.Module):
+    def __init__(self, input_channels=3, feature_maps=64):
+        super().__init__()
+        layers=[]
+        x1 = feature_maps
+        x2 = 1
+        bias_flag = False
+
+        # 1:
         layers.append(spectral_norm(nn.Conv2d(input_channels, feature_maps, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
         layers.append(nn.LeakyReLU(0.2, inplace=True))
         x1 = x1 // 2
