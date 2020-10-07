@@ -8,3 +8,7 @@ python train_celeba128.py --experiment_name=hingv2_spectral_norm_celeba128_lr_sc
 python train_mnist.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2_mnist_spectral_norm_lr_scheduler_gp_line
 python train_mnist.py --experiment_name=gan_mnist
 python train_mnist.py --experiment_name=gan_mnist_SpectrualNorm
+
+
+python train_mnist.py --adversarial_loss_mode=hinge_v2 --experiment_name=hinge_v2_mnist
+python train_mnist.py --adversarial_loss_mode=hinge_v2 --experiment_name=hinge_v2_mnist_SpectrualNorm
