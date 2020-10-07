@@ -70,7 +70,7 @@ print('data-size:    '+str(shape))
 
 # networks
 G = net.Generator(output_channels = 1, feature_maps=args.img_size).to(device)
-D = net.Discriminator(input_channels = 1, feature_maps=args.img_size).to(device)
+D = net.Discriminator_SpectrualNorm(input_channels = 1, feature_maps=args.img_size).to(device)
 #print(G)
 #print(D)
 
