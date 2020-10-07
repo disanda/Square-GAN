@@ -32,6 +32,7 @@ parser.add_argument('--gradient_penalty_weight', type=float, default=10.0)
 parser.add_argument('--experiment_name', default='none')
 parser.add_argument('--img_size',type=int,default=128)
 parser.add_argument('--dataset', default='celeba_128')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
+parser.add_argument('--img_channels', type=int, default=3)# RGB:3 ,L:1
 args = parser.parse_args()
 
 # output_dir
@@ -60,7 +61,7 @@ device = torch.device("cuda" if use_gpu else "cpu")
 # dataset
 data_loader, shape = data.make_dataset(args.dataset, args.batch_size, args.img_size,pin_memory=use_gpu)
 #n_G_upsamplings = n_D_downsamplings = 5 # 3: 32x32  4:64:64 5:128 6:256
-
+print('data-size:    '+str(shape))
 
 
 
@@ -69,8 +70,8 @@ data_loader, shape = data.make_dataset(args.dataset, args.batch_size, args.img_s
 # ==============================================================================
 
 # networks
-G = net.Generator(feature_maps=img_size).to(device)
-D = net.Discriminator(feature_maps=img_size).to(device)
+G = net.Generator(output_channels = args.img_channels, feature_maps=args.img_size).to(device)
+D = net.Discriminator_SpectrualNorm(input_channels = args.img_channels, feature_maps=args.img_size).to(device)
 #print(G)
 #print(D)
 
@@ -113,8 +114,8 @@ if __name__ == '__main__':
 	D.train()
 	for ep in tqdm.trange(args.epochs, desc='Epoch Loop'):
 	    it_d, it_g = 0, 0
-	    #for x_real,flag in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
-	    for x_real in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
+	    for x_real,flag in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
+	    #for x_real in tqdm.tqdm(data_loader, desc='Inner Epoch Loop'):
 	        x_real = x_real.to(device)
 	        z = torch.randn(args.batch_size, args.z_dim, 1, 1).to(device)
 
@@ -126,8 +127,8 @@ if __name__ == '__main__':
 
 	        x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
 
-	        #gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
-	        gp = torch.tensor(0.0)
+	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
+	        #gp = torch.tensor(0.0)
 	        D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
 	        #D_loss = 1/(1+0.005*ep)*D_loss # 渐进式GP!
 
