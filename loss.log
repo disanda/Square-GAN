@@ -1,7 +1,8 @@
 #---------------------- celeba 128 & 256 --------------------
+python train_celeba128.py --experiment_name=spectral_norm_celeba128_lr_scheduler
 python train_celeba128.py --adversarial_loss_mode=hinge_v2 --experiment_name=hingv2_spectral_norm_celeba128_lr_scheduler
 
-python train_celeba256.py --adversarial_loss_mode=hinge_v2 --experiment_name=hingv2_spectral_norm_celeba256_lr_scheduler
+python train_celeba256.py --adversarial_loss_mode=hinge_v2 --experiment_name=hingv2_spectral_norm_celeba256_lr_scheduler --batch_size=16
 
 
 #-----------------------mnist 64 ---------------------

@@ -164,7 +164,7 @@ if __name__ == '__main__':
 	                z_t = torch.randn(36, args.z_dim, 1, 1).to(device)
 	                x_fake = sample(z_t)
 	                torchvision.utils.save_image(x_fake,sample_dir+'/ep%d_it%d.jpg'%(ep,it_g), nrow=6)
-	                with open(output_dir,'a+') as f:
+	                with open(output_dir+'/loss.txt','a+') as f:
 	                    print('G_loss:'+str(G_loss)+'------'+'D_loss'+str(D_loss),file=f)
 	                    print('------------------------')
 	    # save checkpoint
