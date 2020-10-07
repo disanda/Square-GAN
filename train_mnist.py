@@ -69,8 +69,8 @@ print('data-size:    '+str(shape))
 # ==============================================================================
 
 # networks
-G = net.Generator(feature_maps=args.img_size).to(device)
-D = net.Discriminator(feature_maps=args.img_size).to(device)
+G = net.Generator(input_channels = 1, feature_maps=args.img_size).to(device)
+D = net.Discriminator(input_channels = 1, feature_maps=args.img_size).to(device)
 #print(G)
 #print(D)
 
