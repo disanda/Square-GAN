@@ -30,8 +30,8 @@ parser.add_argument('--gradient_penalty_mode', default='none', choices=['none', 
 parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['line', 'real', 'fake', 'dragan'])
 parser.add_argument('--gradient_penalty_weight', type=float, default=10.0)
 parser.add_argument('--experiment_name', default='none')
-parser.add_argument('--img_size',type=int,default=128)
-parser.add_argument('--dataset', default='celeba_128')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
+parser.add_argument('--img_size',type=int,default=64)
+parser.add_argument('--dataset', default='mnist')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
 args = parser.parse_args()
 
 # output_dir
@@ -60,7 +60,7 @@ device = torch.device("cuda" if use_gpu else "cpu")
 # dataset
 data_loader, shape = data.make_dataset(args.dataset, args.batch_size, args.img_size,pin_memory=use_gpu)
 #n_G_upsamplings = n_D_downsamplings = 5 # 3: 32x32  4:64:64 5:128 6:256
-
+print('data-size:    '+str(shape))
 
 
 
@@ -69,8 +69,8 @@ data_loader, shape = data.make_dataset(args.dataset, args.batch_size, args.img_s
 # ==============================================================================
 
 # networks
-G = net.Generator(feature_maps=img_size).to(device)
-D = net.Discriminator(feature_maps=img_size).to(device)
+G = net.Generator(feature_maps=args.img_size).to(device)
+D = net.Discriminator(feature_maps=args.img_size).to(device)
 #print(G)
 #print(D)
 
