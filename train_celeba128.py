@@ -30,7 +30,7 @@ parser.add_argument('--gradient_penalty_mode', default='none', choices=['none', 
 parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['line', 'real', 'fake', 'dragan'])
 parser.add_argument('--gradient_penalty_weight', type=float, default=10.0)
 parser.add_argument('--experiment_name', default='none')
-parser.add_argument('--img_size',type=int,default=256)
+parser.add_argument('--img_size',type=int,default=128)
 parser.add_argument('--dataset', default='celeba_128')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
 parser.add_argument('--img_channels', type=int, default=3)# RGB:3 ,L:1
 args = parser.parse_args()
