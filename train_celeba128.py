@@ -33,6 +33,7 @@ parser.add_argument('--experiment_name', default='none')
 parser.add_argument('--img_size',type=int,default=128)
 parser.add_argument('--dataset', default='celeba_HQ')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
 parser.add_argument('--img_channels', type=int, default=3)# RGB:3 ,L:1
+parser.add_argument('--hsize_scale', type=int, default=16) # 网络隐藏层维度数,默认为 image_size//8 * image_size 
 args = parser.parse_args()
 
 # output_dir
@@ -70,10 +71,10 @@ print('data-size:    '+str(shape))
 # ==============================================================================
 
 # networks
-G = net.Generator(output_channels = args.img_channels,scale=8).to(device)
-D = net.Discriminator_SpectrualNorm(input_channels = args.img_channels,scale=8).to(device)
-if os.path.getsize('./1.txt') == 0:
-	with open(output_dir+'/net.txt','w+') as f:
+G = net.Generator(output_channels = args.img_channels,scale=args.hsize_scale).to(device)
+D = net.Discriminator_SpectrualNorm(input_channels = args.img_channels,scale=args.hsize_scale).to(device)
+with open(output_dir+'/net.txt','w+') as f:
+	if os.path.getsize(output_dir+'/net.txt') == 0:
 		print(G,file=f)
 		print(D,file=f)
 
