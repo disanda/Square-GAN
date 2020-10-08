@@ -1,6 +1,8 @@
 #---------------------- celeba 128 & 256 --------------------
-python train_celeba128.py --experiment_name=spectral_norm_celeba128_lr_scheduler #gan原版，效果逼真, dim = 128//8 * 128 =2048
-python train_celeba128.py --experiment_name=spectral_norm_celeba128  --batch_size=16 #没有指数衰减，图片结果全黑
+python train_celeba128.py --experiment_name=spectral_norm_celeba128_lr_scheduler 
+#gan原版，效果逼真, dim = 128//8 * 128 =2048, 
+#如果 dim =1024,图片结果全黑!
+python train_celeba128.py --experiment_name=spectral_norm_celeba128 #没有指数衰减，图片结果全黑
 
 python train_celeba128.py --adversarial_loss_mode=hinge_v2 --experiment_name=hingv2_spectral_norm_celeba128_lr_scheduler
 
