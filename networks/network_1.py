@@ -47,7 +47,6 @@ class Discriminator(nn.Module):
         # 1:
         layers.append(nn.Conv2d(input_channels, input_dim*x, kernel_size=4, stride=2, padding=1, bias=bias_flag))
         layers.append(nn.LeakyReLU(0.2, inplace=True))
-        x = x*2
 
         # 2: 64*64 > 4*4
         while x<scale:  
@@ -77,7 +76,6 @@ class Discriminator_SpectrualNorm(nn.Module):
         # 1:
         layers.append(spectral_norm(nn.Conv2d(input_channels, input_dim*x, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
         layers.append(nn.LeakyReLU(0.2, inplace=True))
-        x = x*2
 
         # 2: 64*64 > 4*4
         while x<scale:  
