@@ -68,27 +68,25 @@ class Discriminator(nn.Module):
         return y # [1,1,1,1]
 
 class Discriminator_SpectrualNorm(nn.Module):
-    def __init__(self, input_channels=3, feature_maps=64):
+    def __init__(self, input_dim=128, input_channels=3, scale=16):
         super().__init__()
         layers=[]
-        x1 = feature_maps
-        x2 = 1
+        x = 1
         bias_flag = False
 
         # 1:
-        layers.append(spectral_norm(nn.Conv2d(input_channels, feature_maps, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+        layers.append(spectral_norm(nn.Conv2d(input_channels, input_dim*x, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
         layers.append(nn.LeakyReLU(0.2, inplace=True))
-        x1 = x1 // 2
+        x = x*2
 
         # 2: 64*64 > 4*4
-        while x1>4:  
-            layers.append(spectral_norm(nn.Conv2d(feature_maps*x2, feature_maps*x2*2, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+        while x<scale:  
+            layers.append(spectral_norm(nn.Conv2d(input_dim*x, input_dim*x*2, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
             layers.append(nn.LeakyReLU(0.2, inplace=True))
-            x1 = x1 // 2
-            x2 = x2 * 2
+            x = x * 2
 
         # 3: 4*4 > 1*1
-        layers.append(nn.Conv2d(feature_maps*x2, 1, kernel_size=4, stride=1, padding=0))
+        layers.append(nn.Conv2d(input_dim*x, 1, kernel_size=4, stride=1, padding=0))
         #layers.append(nn.Sigmoid())
 
         # all:
