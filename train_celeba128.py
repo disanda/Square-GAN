@@ -72,9 +72,10 @@ print('data-size:    '+str(shape))
 # networks
 G = net.Generator(output_channels = args.img_channels,scale=8).to(device)
 D = net.Discriminator_SpectrualNorm(input_channels = args.img_channels,scale=8).to(device)
-with open(output_dir+'/net.txt','a+') as f:
-	print(G,file=f)
-	print(D,file=f)
+if os.path.getsize('./1.txt') == 0:
+	with open(output_dir+'/net.txt','w+') as f:
+		print(G,file=f)
+		print(D,file=f)
 
 # adversarial_loss_functions
 d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss_mode)
