@@ -31,7 +31,7 @@ parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['
 parser.add_argument('--gradient_penalty_weight', type=float, default=10.0)
 parser.add_argument('--experiment_name', default='none')
 parser.add_argument('--img_size',type=int,default=128)
-parser.add_argument('--dataset', default='celeba_128')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
+parser.add_argument('--dataset', default='celeba_HQ')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
 parser.add_argument('--img_channels', type=int, default=3)# RGB:3 ,L:1
 args = parser.parse_args()
 
@@ -123,6 +123,7 @@ if __name__ == '__main__':
 #--------training D-----------
 	        x_fake = G(z)
 	        #print(x_real.shape)
+	        print('x_real.shape:'+str(x_real.shape))
 	        x_real_d_logit = D(x_real)
 	        x_fake_d_logit = D(x_fake.detach())
 
