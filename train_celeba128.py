@@ -70,10 +70,11 @@ print('data-size:    '+str(shape))
 # ==============================================================================
 
 # networks
-G = net.Generator(output_channels = args.img_channels, feature_maps=args.img_size).to(device)
-D = net.Discriminator_SpectrualNorm(input_channels = args.img_channels, feature_maps=args.img_size).to(device)
-#print(G)
-#print(D)
+G = net.Generator(output_channels = args.img_channels,scale=8).to(device)
+D = net.Discriminator_SpectrualNorm(input_channels = args.img_channels,scale=8).to(device)
+with open(output_dir+'/net.txt','a+') as f:
+	print(G,file=f)
+	print(D,file=f)
 
 # adversarial_loss_functions
 d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss_mode)
@@ -82,8 +83,8 @@ d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss
 # optimizer
 G_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
 D_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
-decayG = torch.optim.lr_scheduler.ExponentialLR(G_optimizer, gamma=1)
-decayD = torch.optim.lr_scheduler.ExponentialLR(D_optimizer, gamma=1)
+#decayG = torch.optim.lr_scheduler.ExponentialLR(G_optimizer, gamma=1)
+#decayD = torch.optim.lr_scheduler.ExponentialLR(D_optimizer, gamma=1)
 
 
 @torch.no_grad()
@@ -135,7 +136,7 @@ if __name__ == '__main__':
 	        D.zero_grad()
 	        D_loss.backward()
 	        D_optimizer.step()
-	        decayD.step()
+	        #decayD.step()
 
 	        D_loss_dict={'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
 
@@ -150,7 +151,7 @@ if __name__ == '__main__':
 	        G.zero_grad()
 	        G_loss.backward()
 	        G_optimizer.step()
-	        decayG.step()
+	        #decayG.step()
 
 	        it_g += 1
 	        G_loss_dict = {'g_loss': G_loss}
