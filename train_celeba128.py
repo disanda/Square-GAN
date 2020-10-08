@@ -122,8 +122,7 @@ if __name__ == '__main__':
 
 #--------training D-----------
 	        x_fake = G(z)
-	        #print(x_real.shape)
-	        print('x_real.shape:'+str(x_real.shape))
+	        #print('x_real.shape:'+str(x_real.shape))
 	        x_real_d_logit = D(x_real)
 	        x_fake_d_logit = D(x_fake.detach())
 
