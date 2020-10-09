@@ -7,8 +7,8 @@ python train_celeba128.py --experiment_name=spectral_norm_celeba128 #没有指�
 
 #和输入维度的关系:
 
-python train_celeba128.py --input_dim=64 --experiment_name=spectral_norm_celeba128_inputDim64
-python train_celeba128.py --input_dim=32 --experiment_name=spectral_norm_celeba128_inputDim32
+python train_celeba128.py --z_dim=64 --experiment_name=spectral_norm_celeba128_inputDim64
+python train_celeba128.py --z_dim=32 --experiment_name=spectral_norm_celeba128_inputDim32
 
 
 
