@@ -3,13 +3,21 @@ python train_celeba128.py --experiment_name=spectral_norm_celeba128_lr_scheduler
 #gan原版，效果逼真, dim = 128//8 * 128 =2048 (scale=16)
 #如果 dim =1024,图片结果全黑! (scale=8)
 
-python train_celeba128.py --experiment_name=spectral_norm_celeba128 #没有指数衰减，图片结果全黑 (scale=16)
+python train_celeba128.py --experiment_name=spectral_norm_celeba128  #没有指数衰减，图片结果部分比较暗淡 (scale=16)
 
-#和输入维度的关系:
+#和输入维度的关系，:
 
-python train_celeba128.py --z_dim=64 --experiment_name=spectral_norm_celeba128_inputDim64
-python train_celeba128.py --z_dim=32 --experiment_name=spectral_norm_celeba128_inputDim32
-
+python train_celeba128.py --z_dim=256 --experiment_name=spectral_norm_celeba128_inputDim256 #
+python train_celeba128.py --z_dim=128 --experiment_name=spectral_norm_celeba128_inputDim128 # ！细节表征已接近充分，但是会出现暗脸
+python train_celeba128.py --z_dim=64 --experiment_name=spectral_norm_celeba128_inputDim64 #效果大致提升
+python train_celeba128.py --z_dim=32 --experiment_name=spectral_norm_celeba128_inputDim32 #?
+python train_celeba128.py --z_dim=16 --experiment_name=spectral_norm_celeba128_inputDim16 
+python train_celeba128.py --z_dim=12 --experiment_name=spectral_norm_celeba128_inputDim12 #效果随着inputDim的提高而提高
+python train_celeba128.py --z_dim=10 --experiment_name=spectral_norm_celeba128_inputDim10 #可以生成，效果一般
+python train_celeba128.py --z_dim=8 --experiment_name=spectral_norm_celeba128_inputDim8 #可以生成，但是已经无法充分表征特征细节了，效果变差。
+python train_celeba128.py --z_dim=6 --experiment_name=spectral_norm_celeba128_inputDim6  # ！ 比dim4更快进入全黑，第100次迭代后就进入群黑，且不会出现人脸雏形
+python train_celeba128.py --z_dim=4 --experiment_name=spectral_norm_celeba128_inputDim4  #比dim1更快进入全黑，前200次迭代(batch_size=32)时就全黑,(进去全黑前会出现人脸雏形)
+python train_celeba128.py --z_dim=1 --experiment_name=spectral_norm_celeba128_inputDim1 #图片在初期ep0-3时有少许单调图像，之后逐渐变为全黑, 维度表征不够?
 
 
 #-----------------------mnist 64 ---------------------
