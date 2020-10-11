@@ -9,7 +9,7 @@ import yaml
 import torchvision
 
 import data
-import networks
+import networks.network_origin as net
 import loss_func
 import g_penal
 
@@ -79,8 +79,8 @@ else:  # cannot use batch normalization with gradient penalty
     d_norm = args.gradient_penalty_d_norm
 
 # networks
-G = networks.ConvGenerator(args.z_dim, shape[-1], n_upsamplings=n_G_upsamplings).to(device)
-D = networks.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, norm=d_norm).to(device)
+G = net.ConvGenerator(args.z_dim, shape[-1], n_upsamplings=n_G_upsamplings).to(device)
+D = net.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, norm=d_norm).to(device)
 #print(G)
 #print(D)
 
