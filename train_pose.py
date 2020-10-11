@@ -9,7 +9,7 @@ import yaml
 import torchvision
 
 import data
-import networks.network_1 as net
+import networks.network as net
 import loss_func
 import g_penal
 
@@ -33,7 +33,6 @@ parser.add_argument('--experiment_name', default='none')
 parser.add_argument('--gradient_penalty_d_norm', default='layer_norm', choices=['instance_norm', 'layer_norm'])  # !!!
 parser.add_argument('--img_size',type=int,default=64)
 parser.add_argument('--img_channels', type=int, default=1)# RGB:3 ,L:1
-parser.add_argument('--scale', type=int, default=16) # scale：网络隐藏层维度数,默认为 image_size//8 * image_size 
 parser.add_argument('--z_dim', type=int, default=64) # 网络随机噪声 z 输入的维度数 即input_dim
 args = parser.parse_args()
 
@@ -80,8 +79,8 @@ else:  # cannot use batch normalization with gradient penalty
     d_norm = args.gradient_penalty_d_norm
 
 # networks
-G = net.Generator(input_dim=args.z_dim, output_channels = args.img_channels,scale=args.scale).to(device)
-D = net.Discriminator_SpectrualNorm(args.z_dim, input_channels = args.img_channels,scale=args.scale).to(device)
+G = net.ConvGenerator(args.z_dim, shape[-1], n_upsamplings=n_G_upsamplings).to(device)
+D = net.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, norm=d_norm).to(device)
 with open(output_dir+'/net.txt','w+') as f:
 	#if os.path.getsize(output_dir+'/net.txt') == 0: #判断文件是否为空
 		print(G,file=f)
