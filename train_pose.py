@@ -9,7 +9,7 @@ import yaml
 import torchvision
 
 import data
-import networks.network as net
+import networks.network_origin as net
 import loss_func
 import g_penal
 
