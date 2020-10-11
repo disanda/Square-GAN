@@ -105,4 +105,4 @@ python train128.py --dataset=mnist --epoch=6000 --gradient_penalty_mode=0-gp --g
 python train128.py --dataset=mnist --epoch=6000 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=64 --experiment_name=hingv1_2_mnist_origin
 
 #------------------------新文件夹 确认实验--------------
-python train64.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-05_04-pg-v2
+python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-05_04-pg-v2

@@ -42,13 +42,14 @@ def make_dataset(dataset_name, batch_size,img_size,drop_remainder=True, shuffle=
         dataset = datasets.CIFAR10('data/CIFAR10', transform=transform, download=True)
         img_shape = [32, 32, 3]
     elif dataset_name == 'pose10':
-        transform = transforms.Compose([
+        transform_pose10 = transforms.Compose([
             transforms.Resize(size=(img_size, img_size)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5], std=[0.5])
         ])
         #dataset = DatasetFromFolder(path='/_yucheng/dataSet/pose/pose_set_10',size=img_size)
         #dataset = DatasetFromFolder(path='./data/Pose/pose_set_10',size=img_size)
+        path_pose10='./data/Pose/pose_set_10'
         img_shape = [img_size, img_size, 1]
     elif dataset_name == 'celeba_64':
         crop_size = 108
@@ -73,7 +74,7 @@ def make_dataset(dataset_name, batch_size,img_size,drop_remainder=True, shuffle=
         path_128 = 'F:/dataSet2/CelebAMask-HQ/CelebA-HQ-img'
         #path_128 = '/home/disanda/Desktop/dataSet/celeba-hq-download/celeba-128'
         #path_128 = '/_yucheng/dataSet/CelebAMask-HQ/CelebAMask-HQ/CelebA-HQ-img'
-        dataset = DatasetFromFolder(path=path_128,transform=transform_128)
+        dataset = DatasetFromFolder(path=path_pose10,transform=transform_pose10)
         img_shape = (img_size, img_size, 3)
     else:
         raise NotImplementedError
