@@ -45,7 +45,7 @@ def make_dataset(dataset_name, batch_size,img_size,drop_remainder=True, shuffle=
         transform_pose10 = transforms.Compose([
             transforms.Resize(size=(img_size, img_size)),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.5], std=[0.5])
+            #transforms.Normalize(mean=[0.5], std=[0.5]) #黑白应该是不用norm
         ])
         #dataset = DatasetFromFolder(path='/_yucheng/dataSet/pose/pose_set_10',size=img_size)
         #dataset = DatasetFromFolder(path='./data/Pose/pose_set_10',size=img_size)
