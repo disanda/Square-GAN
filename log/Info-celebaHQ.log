@@ -7,7 +7,7 @@ python train_celeba128.py --experiment_name=spectral_norm_celeba128  #没有指�
 
 #和输入维度的关系，:
 
-python train_celeba128.py --z_dim=256 --experiment_name=spectral_norm_celeba128_inputDim256 #
+python train_celeba128.py --z_dim=200 --experiment_name=spectral_norm_celeba128_inputDim200 # ! 在z_dim维度扩大后，在没有decay的情况下消除了暗脸！
 python train_celeba128.py --z_dim=128 --experiment_name=spectral_norm_celeba128_inputDim128 # ！细节表征已接近充分，但是会出现暗脸
 python train_celeba128.py --z_dim=64 --experiment_name=spectral_norm_celeba128_inputDim64 #效果大致提升
 python train_celeba128.py --z_dim=32 --experiment_name=spectral_norm_celeba128_inputDim32 #?
