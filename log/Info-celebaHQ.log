@@ -19,6 +19,8 @@ python train_celeba128.py --z_dim=6 --experiment_name=spectral_norm_celeba128_in
 python train_celeba128.py --z_dim=4 --experiment_name=spectral_norm_celeba128_inputDim4  #比dim1更快进入全黑，前200次迭代(batch_size=32)时就全黑,(进去全黑前会出现人脸雏形)
 python train_celeba128.py --z_dim=1 --experiment_name=spectral_norm_celeba128_inputDim1 #图片在初期ep0-3时有少许单调图像，之后逐渐变为全黑, 维度表征不够?
 
+#只有D有Decay
+python train_celeba128.py --z_dim=128 --experiment_name=spectral_norm_celeba128_inputDim128_D_Decay
 
 #-----------------------mnist 64 ---------------------
 python train_mnist.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2_mnist_spectral_norm_lr_scheduler_gp_line
