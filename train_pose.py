@@ -58,8 +58,8 @@ with open(os.path.join(output_dir, 'settings.yml'), "w", encoding="utf-8") as f:
 
 
 # others
-#use_gpu = torch.cuda.is_available()
-use_gpu = False
+use_gpu = torch.cuda.is_available()
+#use_gpu = False
 device = torch.device(args.device)
 
 # ----------------setup dataset-------------------
@@ -214,7 +214,7 @@ if __name__ == '__main__':
 	        x_fake_d_logit = D(x_fake.detach())
 
 	        #x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
-	        r_loss = torch.max(0.5- x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	        r_loss = torch.max(0.55- x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
 	        f_loss = torch.max(0.4+ x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 	        #((args.epochs-ep)//args.epochs) # Round_gp
 
