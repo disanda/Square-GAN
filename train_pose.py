@@ -58,7 +58,8 @@ with open(os.path.join(output_dir, 'settings.yml'), "w", encoding="utf-8") as f:
 
 
 # others
-#use_device = torch.cuda.is_available()
+#use_gpu = torch.cuda.is_available()
+use_gpu = False
 device = torch.device(args.device)
 
 # ----------------setup dataset-------------------
