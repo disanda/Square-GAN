@@ -212,8 +212,8 @@ if __name__ == '__main__':
 	        x_fake_d_logit = D(x_fake.detach())
 
 	        #x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
-	        r_loss = torch.max(0.5- (ep//args.epochs)*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
-	        f_loss = torch.max(0.4+ (ep//args.epochs)*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+	        r_loss = torch.max(0.5- ((args.epochs-ep)//args.epochs)*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	        f_loss = torch.max(0.4+ ((args.epochs-ep)//args.epochs)*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 	        
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (r_loss + f_loss) + gp * args.gradient_penalty_weight
@@ -230,7 +230,7 @@ if __name__ == '__main__':
 
 #-----------training G-----------
 	        x_fake_d_logit = D(x_fake)
-	        G_loss = (-x_fake_d_logit.mean() * (ep//args.epochs) ) #渐进式loss
+	        G_loss = (-x_fake_d_logit.mean() * ((args.epochs-ep)//args.epochs) ) #渐进式loss
 	        G.zero_grad()
 	        G_loss.backward()
 	        G_optimizer.step()
