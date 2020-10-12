@@ -214,8 +214,8 @@ if __name__ == '__main__':
 	        x_fake_d_logit = D(x_fake.detach())
 
 	        #x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
-	        r_loss = torch.max(torch.randn(1)- x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
-	        f_loss = torch.max(torch.randn(1)+ x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+	        r_loss = torch.max( (args.epochs-ep)//args.epochs - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	        f_loss = torch.max( (args.epochs-ep)//args.epochs + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 	        #((args.epochs-ep)//args.epochs) # Round_gp
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
@@ -250,7 +250,7 @@ if __name__ == '__main__':
 	            x_fake = sample(z_t)
 	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
 	            with open(output_dir+'/loss.txt','a+') as f:
-	                    print('G_loss:'+str(G_loss)+'------'+'D_loss'+str(D_loss),file=f)
+	                    print('Ep:'+str(ep)+'---'+'G_loss:'+str(G_loss)+'------'+'D_loss'+str(D_loss),file=f)
 	                    print('------------------------')
 	    # save checkpoint
 	    if ep%100==0:
