@@ -25,6 +25,7 @@ parser.add_argument('--batch_size', type=int, default=1)
 parser.add_argument('--epochs', type=int, default=5000)
 parser.add_argument('--lr', type=float, default=0.0002)
 parser.add_argument('--beta_1', type=float, default=0.5)
+parser.add_argument('--beta_2', type=float, default=0.99)
 parser.add_argument('--adversarial_loss_mode', default='gan', choices=['gan', 'hinge_v1', 'hinge_v2', 'lsgan', 'wgan'])
 parser.add_argument('--gradient_penalty_mode', default='none', choices=['none', '1-gp', '0-gp', 'lp'])
 parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['line', 'real', 'fake', 'dragan'])
@@ -150,8 +151,8 @@ d_loss_fn_4,g_loss_fn_4 = get_hinge_v2_4()
 d_loss_fn_5,g_loss_fn_5 = get_hinge_v2_5()
 
 # optimizer
-G_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002, betas=(0.80, 0.99)) #一阶当前，二阶历史总和
-D_optimizer = torch.optim.Adam(D.parameters(), lr=0.0002, betas=(0.80, 0.99))
+G_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002, betas=(args.beta_1, args.beta_2)) #一阶当前，二阶历史总和
+D_optimizer = torch.optim.Adam(D.parameters(), lr=0.0002, betas=(args.beta_1, args.beta_2))
 
 #G_optimizer = torch.optim.SGD(G.parameters(), lr=0.0001, momentum=0.9)
 #D_optimizer = torch.optim.SGD(D.parameters(), lr=0.0001, momentum=0.9)
