@@ -35,6 +35,7 @@ parser.add_argument('--gradient_penalty_d_norm', default='layer_norm', choices=[
 parser.add_argument('--img_size',type=int,default=64)
 parser.add_argument('--img_channels', type=int, default=1)# RGB:3 ,L:1
 parser.add_argument('--z_dim', type=int, default=64) # 网络随机噪声 z 输入的维度数 即input_dim
+parser.add_argument('--device',default='cuda') # 'cpu'
 args = parser.parse_args()
 
 # output_dir
@@ -57,8 +58,8 @@ with open(os.path.join(output_dir, 'settings.yml'), "w", encoding="utf-8") as f:
 
 
 # others
-use_gpu = torch.cuda.is_available()
-device = torch.device("cuda" if use_gpu else "cpu")
+#use_device = torch.cuda.is_available()
+device = torch.device(args.device)
 
 # ----------------setup dataset-------------------
 
