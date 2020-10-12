@@ -1,1 +1,6 @@
+python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-05_decay 
+
+
+#-------------------shift target-------------------
 python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-05_decay
+## 在原来的基础上加了RoundGP(根据ep来递减gradient),其次D的hinge目标从05 shift到 04
