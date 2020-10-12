@@ -212,8 +212,8 @@ if __name__ == '__main__':
 	        x_fake_d_logit = D(x_fake.detach())
 
 	        #x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
-	        r_loss = torch.max(0.5- (ep//args.epochs)*r_logit, torch.zeros_like(r_logit)).mean()
-	        f_loss = torch.max(0.4+ (ep//args.epochs)*f_logit, torch.zeros_like(f_logit)).mean()
+	        r_loss = torch.max(0.5- (ep//args.epochs)*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	        f_loss = torch.max(0.4+ (ep//args.epochs)*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 	        
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
