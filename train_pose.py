@@ -216,13 +216,13 @@ if __name__ == '__main__':
 	        f_loss = torch.max(0.4+ (ep//args.epochs)*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 	        
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
-	        D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
+	        D_loss = (r_loss + f_loss) + gp * args.gradient_penalty_weight
 	        #D_loss = 1/(1+0.001*ep)*D_loss # 渐进式GP!
 
 	        D.zero_grad()
 	        D_loss.backward()
 	        D_optimizer.step()
-	        D_loss_dict={'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
+	        D_loss_dict={'d_loss': r_loss + f_loss, 'gp': gp}
 
 	        it_d += 1
 	        for k, v in D_loss_dict.items():
