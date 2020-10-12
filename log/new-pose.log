@@ -11,3 +11,5 @@ python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-
 # 1000次前暂时看来： 效果不错
 
 python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-shift_r055-f04
+
+python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-shift_r06-f03 --device=cpu
