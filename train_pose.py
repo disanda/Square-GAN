@@ -236,6 +236,7 @@ if __name__ == '__main__':
 
 #-----------training G-----------
 	        x_fake_d_logit_2 = D(x_fake)
+	        #G_loss =  (torch.randn(1).to(device)-x_fake_d_logit_2).mean()
 	        G_loss = torch.max( torch.randn(1).to(device)-x_fake_d_logit_2, torch.zeros_like(x_fake_d_logit_2) ).mean() #* ((args.epochs-ep)//args.epochs) ) #渐进式loss
 	        G.zero_grad()
 	        G_loss.backward()
