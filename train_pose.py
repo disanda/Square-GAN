@@ -219,7 +219,7 @@ if __name__ == '__main__':
 	        #f_loss = torch.max( 0.1+(args.epochs-ep)//args.epochs + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
 	        r_loss = torch.max( torch.randn(1).to(device) - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean() #shift_randomD 
-	        f_loss = torch.max( torch.randn(1).to(device) + x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	        f_loss = torch.max( torch.randn(1).to(device) + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (r_loss + f_loss) + gp * args.gradient_penalty_weight
