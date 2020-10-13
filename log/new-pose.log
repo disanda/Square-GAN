@@ -21,5 +21,6 @@ python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-
 
 python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-shift_randomD_01
 
+
 python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-shift_randomD_05
 #训练速度变快，双人效果变少
