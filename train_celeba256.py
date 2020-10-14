@@ -71,8 +71,8 @@ print('data-size:    '+str(shape))
 # ==============================================================================
 
 # networks
-G = net.Generator(input_dim=args.z_dim, output_channels = args.img_channels,scale=args.scale).to(device)
-D = net.Discriminator_SpectrualNorm(args.z_dim, input_channels = args.img_channels,scale=args.scale).to(device)
+G = net.Generator(input_dim=args.z_dim, output_channels = args.img_channels, image_size=args.img_size, scale=args.scale).to(device)
+D = net.Discriminator_SpectrualNorm(args.z_dim, input_channels = args.img_channels, image_size=args.img_size, scale=args.scale).to(device)
 with open(output_dir+'/net.txt','w+') as f:
 	#if os.path.getsize(output_dir+'/net.txt') == 0: #判断文件是否为空
 		print(G,file=f)
