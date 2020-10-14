@@ -138,7 +138,7 @@ if __name__ == '__main__':
 	        D.zero_grad()
 	        D_loss.backward()
 	        D_optimizer.step()
-	        decayD.step()
+	        #decayD.step()
 
 	        D_loss_dict={'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
 
