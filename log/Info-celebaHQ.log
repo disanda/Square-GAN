@@ -1,11 +1,13 @@
-#---------------------- celeba 128 & 256 --------------------
+#---------------------- celeba 128--------------------
+
+# hidden_size和效果的关系
+
 python train_celeba128.py --experiment_name=spectral_norm_celeba128_lr_scheduler 
 #gan原版，效果逼真, dim = 128//8 * 128 =2048 (scale=16)
 #如果 dim =1024,图片结果全黑! (scale=8)
 
-python train_celeba128.py --experiment_name=spectral_norm_celeba128  #没有指数衰减，图片结果部分比较暗淡 (scale=16)
 
-#和输入维度的关系，:
+# 和输入维度的关系 :
 
 python train_celeba128.py --z_dim=200 --experiment_name=spectral_norm_celeba128_inputDim200 # ! 在z_dim维度扩大后，在没有decay的情况下消除了暗脸！
 python train_celeba128.py --z_dim=128 --experiment_name=spectral_norm_celeba128_inputDim128 # ！细节表征已接近充分，但是会出现暗脸
@@ -19,8 +21,14 @@ python train_celeba128.py --z_dim=6 --experiment_name=spectral_norm_celeba128_in
 python train_celeba128.py --z_dim=4 --experiment_name=spectral_norm_celeba128_inputDim4  #比dim1更快进入全黑，前200次迭代(batch_size=32)时就全黑,(进去全黑前会出现人脸雏形)
 python train_celeba128.py --z_dim=1 --experiment_name=spectral_norm_celeba128_inputDim1 #图片在初期ep0-3时有少许单调图像，之后逐渐变为全黑, 维度表征不够?
 
-#只有D有Decay
-python train_celeba128.py --z_dim=128 --experiment_name=spectral_norm_celeba128_inputDim128_D_Decay #貌似非对称的情况下不太行？
+# 梯度衰减，即随着训练的增加，梯度随着"训练次数"的增加而衰减
+
+python train_celeba128.py --experiment_name=spectral_norm_celeba128  #只有D有Decay, 没有指数衰减，图片结果部分比较暗淡 (scale=16) 
+python train_celeba128.py --z_dim=128 --experiment_name=spectral_norm_celeba128_inputDim128_D_Decay #貌似非对称的情况下不太行。效果很差，类似模式崩溃
+
+
+#---------------------- celeba 256 --------------------
+python train_celeba256.py --z_dim=64 --experiment_name=spectral_norm_celeba256_inputDim64
 
 #-----------------------mnist 64 ---------------------
 python train_mnist.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2_mnist_spectral_norm_lr_scheduler_gp_line

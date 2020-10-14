@@ -29,6 +29,7 @@ python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-
 #比较单一
 
 python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-shift_randomDG_Relu
+初期效果不错
 
 python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-shift_randomDG_Relu_EpGP
 

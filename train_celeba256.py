@@ -23,16 +23,17 @@ parser = argparse.ArgumentParser(description='the training args')
 parser.add_argument('--epochs', type=int, default=100)
 parser.add_argument('--lr', type=float, default=0.0002)
 parser.add_argument('--beta_1', type=float, default=0.5)
-parser.add_argument('--z_dim', type=int, default=128)
-parser.add_argument('--batch_size', type=int, default=32)
+parser.add_argument('--batch_size', type=int, default=16)
 parser.add_argument('--adversarial_loss_mode', default='gan', choices=['gan', 'hinge_v1', 'hinge_v2', 'lsgan', 'wgan'])
 parser.add_argument('--gradient_penalty_mode', default='none', choices=['none', '1-gp', '0-gp', 'lp'])
 parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['line', 'real', 'fake', 'dragan'])
 parser.add_argument('--gradient_penalty_weight', type=float, default=10.0)
 parser.add_argument('--experiment_name', default='none')
 parser.add_argument('--img_size',type=int,default=256)
-parser.add_argument('--dataset', default='celeba_128')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
+parser.add_argument('--dataset', default='celeba_HQ')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
 parser.add_argument('--img_channels', type=int, default=3)# RGB:3 ,L:1
+parser.add_argument('--scale', type=int, default=16) # scale：网络隐藏层维度数,默认为 image_size//8 * image_size 
+parser.add_argument('--z_dim', type=int, default=64) # 网络随机噪声 z 输入的维度数 即input_dim
 args = parser.parse_args()
 
 # output_dir
@@ -70,10 +71,12 @@ print('data-size:    '+str(shape))
 # ==============================================================================
 
 # networks
-G = net.Generator(output_channels = args.img_channels, feature_maps=args.img_size).to(device)
-D = net.Discriminator_SpectrualNorm(input_channels = args.img_channels, feature_maps=args.img_size).to(device)
-#print(G)
-#print(D)
+G = net.Generator(input_dim=args.z_dim, output_channels = args.img_channels,scale=args.scale).to(device)
+D = net.Discriminator_SpectrualNorm(args.z_dim, input_channels = args.img_channels,scale=args.scale).to(device)
+with open(output_dir+'/net.txt','w+') as f:
+	#if os.path.getsize(output_dir+'/net.txt') == 0: #判断文件是否为空
+		print(G,file=f)
+		print(D,file=f)
 
 # adversarial_loss_functions
 d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss_mode)
@@ -82,8 +85,8 @@ d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss
 # optimizer
 G_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
 D_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
-decayG = torch.optim.lr_scheduler.ExponentialLR(G_optimizer, gamma=1)
-decayD = torch.optim.lr_scheduler.ExponentialLR(D_optimizer, gamma=1)
+#decayG = torch.optim.lr_scheduler.ExponentialLR(G_optimizer, gamma=1)
+#decayD = torch.optim.lr_scheduler.ExponentialLR(D_optimizer, gamma=1)
 
 
 @torch.no_grad()
@@ -135,7 +138,7 @@ if __name__ == '__main__':
 	        D.zero_grad()
 	        D_loss.backward()
 	        D_optimizer.step()
-	        decayD.step()
+	        #decayD.step()
 
 	        D_loss_dict={'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
 
@@ -150,7 +153,7 @@ if __name__ == '__main__':
 	        G.zero_grad()
 	        G_loss.backward()
 	        G_optimizer.step()
-	        decayG.step()
+	        #decayG.step()
 
 	        it_g += 1
 	        G_loss_dict = {'g_loss': G_loss}
