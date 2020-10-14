@@ -18,10 +18,9 @@ python train_celeba128.py --z_dim=1 --experiment_name=spectral_norm_celeba128_in
 python train_celeba128.py --experiment_name=spectral_norm_celeba128  #只有D有Decay, 没有指数衰减，图片结果部分比较暗淡 (scale=16) 
 python train_celeba128.py --z_dim=128 --experiment_name=spectral_norm_celeba128_inputDim128_D_Decay #貌似梯度递减在非对称的情况下不太行。效果很差，类似模式崩溃
 
-# hidden_size和效果的关系
-python train_celeba128.py --experiment_name=spectral_norm_celeba128_lr_scheduler 
-#gan原版，效果逼真, dim = 128//8 * 128 =2048 (scale=16)
-#如果 dim =1024,图片结果全黑! (scale=8)
+# input_dim和效果的关系
+python train_celeba128.py --z_dim=8 --scale=128 --experiment_name=spectral_norm_celeba128_inputDim8_scale128 # 这个规模和dim64,scale16是一样的，区别只是input_dim不同,结果是 ？
+
 
 
 
