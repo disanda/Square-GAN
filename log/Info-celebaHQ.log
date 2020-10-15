@@ -19,7 +19,10 @@ python train_celeba128.py --experiment_name=spectral_norm_celeba128  #只有D有
 python train_celeba128.py --z_dim=128 --experiment_name=spectral_norm_celeba128_inputDim128_D_Decay #貌似梯度递减在非对称的情况下不太行。效果很差，类似模式崩溃
 
 # input_dim和效果的关系
-python train_celeba128.py --z_dim=8 --scale=128 --experiment_name=spectral_norm_celeba128_inputDim8_scale128 # 这个规模和dim64,scale16是一样的，区别只是input_dim不同,结果是 ？
+python train_celeba128.py --z_dim=8 --scale=128 --experiment_name=spectral_norm_celeba128_inputDim8_scale128 
+# 这个和上面实验中inputDim64(scale16)的网络规模一样的，区别只是input_dim不同, 结果是: 初期很暗淡，后期背景和头像都比较单一
+
+python train_celeba128.py --z_dim=16 --scale=64 --experiment_name=spectral_norm_celeba128_inputDim16_scale64
 
 
 
