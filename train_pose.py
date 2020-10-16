@@ -230,7 +230,7 @@ if __name__ == '__main__':
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (r_loss + f_loss) + gp * args.gradient_penalty_weight
-	        D_loss = 1/(1+0.01*ep)*D_loss # 渐进式GP!
+	        D_loss = 1/(1+0.001*ep)*D_loss # 渐进式GP!
 	        D.zero_grad()
 	        D_loss.backward()
 	        D_optimizer.step()
