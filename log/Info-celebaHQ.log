@@ -43,7 +43,9 @@ python train_celeba256.py --z_dim=32 --Gscale=16 --Dscale=8 --experiment_name=sp
 #持平
 
 python train_celeba256.py --z_dim=64 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_8
-#持平, hidden=1024
+#win: 持平, hidden=1024, 参数太低，不清楚
+
+python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_8
 
 #-----------------------mnist 64 ---------------------
 python train_mnist.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2_mnist_spectral_norm_lr_scheduler_gp_line
