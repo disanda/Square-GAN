@@ -36,7 +36,7 @@ parser.add_argument('--img_size',type=int,default=64)
 parser.add_argument('--img_channels', type=int, default=1)# RGB:3 ,L:1
 parser.add_argument('--z_dim', type=int, default=64) # 网络随机噪声 z 输入的维度数 即input_dim
 parser.add_argument('--device',default='cuda') # 'cpu'
-parser.add_argument('--netBias',default='False') # 'cpu'
+parser.add_argument('--netBias',default=False) # 'cpu'
 args = parser.parse_args()
 
 # output_dir
