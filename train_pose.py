@@ -243,7 +243,7 @@ if __name__ == '__main__':
 	        x_fake_d_logit_2 = D(x_fake)
 	        #G_loss =  (torch.randn(1).to(device)-x_fake_d_logit_2).mean()
 	        #G_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device)-x_fake_d_logit_2, torch.zeros_like(x_fake_d_logit_2) ).mean() #* ((args.epochs-ep)//args.epochs) ) #渐进式loss
-	        G_loss = - x_fake_d_logit_2.mean()
+	        G_loss = - 0.5*x_fake_d_logit_2.mean()
 	        G_loss = 1/(1+0.001*ep)*G_loss # 渐进式GP!
 
 	        G.zero_grad()
