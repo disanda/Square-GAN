@@ -104,8 +104,8 @@ python train128.py --dataset=pose10 --epoch=6000 --gradient_penalty_mode=0-gp --
 python train128.py --dataset=mnist --epoch=6000 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=64 --experiment_name=hingv1_2_mnist
 python train128.py --dataset=mnist --epoch=6000 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=64 --experiment_name=hingv1_2_mnist_origin
 
-#------------------------新文件夹 确认实验--------------
+#------------------------新文件夹 确认实验 ep=5000--------------
 python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-05_decay
 
-python train.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-05-PG_loss_v4
-#距离为05，1000次ep后loss衰减，bias=flase
+python train_pose.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-05-lossGP
+#距离为05，D的loss衰减:D_loss = 1/(1+0.001*ep)*D_loss，bias=flase
