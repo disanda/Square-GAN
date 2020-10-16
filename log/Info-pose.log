@@ -118,4 +118,6 @@ python train_pose_decay.py --gradient_penalty_mode=0-gp --gradient_penalty_sampl
 
 #--------------------两级反转--------------
 python train_pose_LJFZ.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2gp-LJFZ
+#一开始样本生成较好，原样本颜色也较深。
+#hinge距离设为1，G训练很早就收敛了
 

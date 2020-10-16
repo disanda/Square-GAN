@@ -228,11 +228,11 @@ if __name__ == '__main__':
 	        #f_loss = torch.max(0.5 + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
 	        if ep < 1000:
-	            r_loss = torch.max(1 - (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
-	            f_loss = torch.max(1 + (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+	            r_loss = torch.max(0.5 - (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	            f_loss = torch.max(0.5 + (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 	        else:
-	            r_loss = torch.max(1 + (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
-	            f_loss = torch.max(1 - (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+	            r_loss = torch.max(0.4 + (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	            f_loss = torch.max(0.4 - (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (r_loss + f_loss) + gp * args.gradient_penalty_weight
@@ -250,9 +250,9 @@ if __name__ == '__main__':
 	        #G_loss =  (torch.randn(1).to(device)-x_fake_d_logit_2).mean()
 	        #G_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device)-x_fake_d_logit_2, torch.zeros_like(x_fake_d_logit_2) ).mean() #* ((args.epochs-ep)//args.epochs) ) #渐进式loss
 	        if ep < 1000:
-	            G_loss = -x_fake_d_logit_2.mean()
+	            G_loss = -0.5x_fake_d_logit_2.mean()
 	        else:
-	            G_loss = -x_fake_d_logit_2.mean()
+	            G_loss = 0.4x_fake_d_logit_2.mean()
 	        G_loss = 1/(1+0.002*ep)*G_loss # 渐进式GP!
 	        G.zero_grad()
 	        G_loss.backward()
