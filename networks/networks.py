@@ -28,7 +28,7 @@ class ConvGenerator(nn.Module):
                  output_channels=3,
                  dim=64,
                  n_upsamplings=4,
-                 norm='batch_norm'
+                 norm='batch_norm',
                  biaS = False
                 ):
         super().__init__()
@@ -60,7 +60,7 @@ class ConvDiscriminator(nn.Module):
                  input_channels=3,
                  dim=64,
                  n_downsamplings=4,
-                 norm='batch_norm'
+                 norm='batch_norm',
                  biaS = False
                  ):
         super().__init__()
