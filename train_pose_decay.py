@@ -1,3 +1,5 @@
+#逐渐衰减DG,但是D衰减比G慢
+
 import functools
 import numpy as np
 import tensorboardX
@@ -26,7 +28,7 @@ parser.add_argument('--epochs', type=int, default=5000)
 parser.add_argument('--lr', type=float, default=0.0002)
 parser.add_argument('--beta_1', type=float, default=0.5)
 parser.add_argument('--beta_2', type=float, default=0.99)
-parser.add_argument('--adversarial_loss_mode', default='gan', choices=['gan', 'hinge_v1', 'hinge_v2', 'lsgan', 'wgan'])
+parser.add_argument('--adversarial_loss_mode', default='hinge_v2', choices=['gan', 'hinge_v1', 'hinge_v2', 'lsgan', 'wgan'])
 parser.add_argument('--gradient_penalty_mode', default='none', choices=['none', '1-gp', '0-gp', 'lp'])
 parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['line', 'real', 'fake', 'dragan'])
 parser.add_argument('--gradient_penalty_weight', type=float, default=10.0)
@@ -35,6 +37,8 @@ parser.add_argument('--gradient_penalty_d_norm', default='layer_norm', choices=[
 parser.add_argument('--img_size',type=int,default=64)
 parser.add_argument('--img_channels', type=int, default=1)# RGB:3 ,L:1
 parser.add_argument('--z_dim', type=int, default=64) # 网络随机噪声 z 输入的维度数 即input_dim
+parser.add_argument('--device',default='cuda') # 'cpu'
+parser.add_argument('--netBias',type=bool,default=False) # 'cpu'
 args = parser.parse_args()
 
 # output_dir
@@ -58,7 +62,8 @@ with open(os.path.join(output_dir, 'settings.yml'), "w", encoding="utf-8") as f:
 
 # others
 use_gpu = torch.cuda.is_available()
-device = torch.device("cuda" if use_gpu else "cpu")
+#use_gpu = False
+device = torch.device(args.device)
 
 # ----------------setup dataset-------------------
 
@@ -80,8 +85,8 @@ else:  # cannot use batch normalization with gradient penalty
     d_norm = args.gradient_penalty_d_norm
 
 # networks
-G = net.ConvGenerator(args.z_dim, shape[-1], n_upsamplings=n_G_upsamplings).to(device)
-D = net.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, norm=d_norm).to(device)
+G = net.ConvGenerator(args.z_dim, shape[-1], n_upsamplings=n_G_upsamplings, biaS = args.netBias).to(device)
+D = net.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, biaS = args.netBias).to(device)
 with open(output_dir+'/net.txt','w+') as f:
 	#if os.path.getsize(output_dir+'/net.txt') == 0: #判断文件是否为空
 		print(G,file=f)
@@ -211,35 +216,37 @@ if __name__ == '__main__':
 	        x_real_d_logit = D(x_real)
 	        x_fake_d_logit = D(x_fake.detach())
 
-	        if ep <= 1000:
-	             x_real_d_loss, x_fake_d_loss = d_loss_fn_1(x_real_d_logit, x_fake_d_logit)
-	        elif ep <= 2000 & ep>1000:
-	             x_real_d_loss, x_fake_d_loss = d_loss_fn_2(x_real_d_logit, x_fake_d_logit)
-	        elif ep <= 3000 & ep >2000:
-	             x_real_d_loss, x_fake_d_loss = d_loss_fn_3(x_real_d_logit, x_fake_d_logit)
-	        elif ep <= 4000 & ep >3000:
-	             x_real_d_loss, x_fake_d_loss = d_loss_fn_4(x_real_d_logit, x_fake_d_logit)
-	        else:
-	             x_real_d_loss, x_fake_d_loss = d_loss_fn_5(x_real_d_logit, x_fake_d_logit)
 	        #x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
+	        
+	        #r_loss = torch.max( 0.1+(args.epochs-ep)//args.epochs - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()#((args.epochs-ep)//args.epochs) # Round_gp
+	        #f_loss = torch.max( 0.1+(args.epochs-ep)//args.epochs + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+
+	        #r_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device) - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean() #shift_randomD 
+	        #f_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device) + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+
+	        #r_loss = torch.max(0.5 - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	        #f_loss = torch.max(0.5 + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+
+	        r_loss = torch.max(0.5 - (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	        f_loss = torch.max(0.5 + (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
-	        D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
+	        D_loss = (r_loss + f_loss) + gp * args.gradient_penalty_weight
 	        D_loss = 1/(1+0.001*ep)*D_loss # 渐进式GP!
-
 	        D.zero_grad()
 	        D_loss.backward()
 	        D_optimizer.step()
-	        D_loss_dict={'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
-
+	        D_loss_dict={'d_loss': r_loss + f_loss, 'gp': gp}
 	        it_d += 1
 	        for k, v in D_loss_dict.items():
 	            writer.add_scalar('D/%s' % k, v.data.cpu().numpy(), global_step=it_d)
 
 #-----------training G-----------
-	        x_fake_d_logit = D(x_fake)
-	        G_loss = g_loss_fn(x_fake_d_logit) #渐进式loss
-	        G_loss = 1/(1+ep*0.001)*g_loss_fn(x_fake_d_logit) #渐进式loss
+	        x_fake_d_logit_2 = D(x_fake)
+	        #G_loss =  (torch.randn(1).to(device)-x_fake_d_logit_2).mean()
+	        #G_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device)-x_fake_d_logit_2, torch.zeros_like(x_fake_d_logit_2) ).mean() #* ((args.epochs-ep)//args.epochs) ) #渐进式loss
+	        G_loss = -0.5*x_fake_d_logit_2.mean()
+	        G_loss = 1/(1+0.01*ep)*G_loss # 渐进式GP!
 	        G.zero_grad()
 	        G_loss.backward()
 	        G_optimizer.step()
@@ -256,7 +263,7 @@ if __name__ == '__main__':
 	            x_fake = sample(z_t)
 	            torchvision.utils.save_image(x_fake,sample_dir+'/ep%d.jpg'%(ep), nrow=8)
 	            with open(output_dir+'/loss.txt','a+') as f:
-	                    print('G_loss:'+str(G_loss)+'------'+'D_loss'+str(D_loss),file=f)
+	                    print('Ep:'+str(ep)+'---'+'G_loss:'+str(G_loss)+'------'+'D_loss'+str(D_loss),file=f)
 	                    print('------------------------')
 	    # save checkpoint
 	    if ep%100==0:

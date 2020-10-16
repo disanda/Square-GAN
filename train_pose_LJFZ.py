@@ -1,3 +1,5 @@
+#逐渐衰减DG,但是D衰减比G慢
+
 import functools
 import numpy as np
 import tensorboardX
@@ -225,12 +227,16 @@ if __name__ == '__main__':
 	        #r_loss = torch.max(0.5 - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
 	        #f_loss = torch.max(0.5 + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
-	        r_loss = torch.max(0.5 - (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
-	        f_loss = torch.max(0.5 + (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+	        if ep < 1000:
+	            r_loss = torch.max(1 - (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	            f_loss = torch.max(1 + (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+	        else:
+                r_loss = torch.max(0.5 + (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	            f_loss = torch.max(0.5 - (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (r_loss + f_loss) + gp * args.gradient_penalty_weight
-	        D_loss = 1/(1+0.001*ep)*D_loss # 渐进式GP!
+	        D_loss = 1/(1+0.002*ep)*D_loss # 渐进式GP!
 	        D.zero_grad()
 	        D_loss.backward()
 	        D_optimizer.step()
@@ -243,8 +249,11 @@ if __name__ == '__main__':
 	        x_fake_d_logit_2 = D(x_fake)
 	        #G_loss =  (torch.randn(1).to(device)-x_fake_d_logit_2).mean()
 	        #G_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device)-x_fake_d_logit_2, torch.zeros_like(x_fake_d_logit_2) ).mean() #* ((args.epochs-ep)//args.epochs) ) #渐进式loss
-	        G_loss = -0.5*x_fake_d_logit_2.mean()
-	        G_loss = 1/(1+0.01*ep)*G_loss # 渐进式GP!
+	        if ep < 1000:
+	            G_loss = -x_fake_d_logit_2.mean()
+	        else:
+	            G_loss = 0.5*x_fake_d_logit_2.mean()
+	        G_loss = 1/(1+0.002*ep)*G_loss # 渐进式GP!
 	        G.zero_grad()
 	        G_loss.backward()
 	        G_optimizer.step()

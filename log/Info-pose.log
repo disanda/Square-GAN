@@ -113,7 +113,9 @@ python train_pose.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode
 python train_pose.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-05-lossALL-GP
 #距离为05，G和D的loss衰减:D_loss = 1/(1+0.001*ep)*D_loss，bias=flase
 
-python train_pose.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2gp-05dis-LossWithTarget-GP
-#距离为05，G和D的loss衰减: 1/(1+0.01*ep)*loss，且目标增量也有衰减 (args.epochs-ep)//args.epochs , bias=flase
+python train_pose_decay.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2gp-05dis-LossWithTarget-GP
+#距离为05，G和D的loss衰减: 1/(1+0.01*ep)*loss-1/(1+0.001*ep)*loss，且目标增量也有衰减 (args.epochs-ep)/args.epochs , bias=flase, D比G衰减的慢
 
+#--------------------两级反转--------------
+python train_pose_LJFZ.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2gp-LJFZ
 
