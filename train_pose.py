@@ -36,6 +36,7 @@ parser.add_argument('--img_size',type=int,default=64)
 parser.add_argument('--img_channels', type=int, default=1)# RGB:3 ,L:1
 parser.add_argument('--z_dim', type=int, default=64) # 网络随机噪声 z 输入的维度数 即input_dim
 parser.add_argument('--device',default='cuda') # 'cpu'
+parser.add_argument('--netBias',default='False') # 'cpu'
 args = parser.parse_args()
 
 # output_dir
@@ -82,8 +83,8 @@ else:  # cannot use batch normalization with gradient penalty
     d_norm = args.gradient_penalty_d_norm
 
 # networks
-G = net.ConvGenerator(args.z_dim, shape[-1], n_upsamplings=n_G_upsamplings).to(device)
-D = net.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, norm=d_norm).to(device)
+G = net.ConvGenerator(args.z_dim, shape[-1], n_upsamplings=n_G_upsamplings, biaS = args.netBias).to(device)
+D = net.ConvDiscriminator(shape[-1], n_downsamplings=n_D_downsamplings, biaS = args.netBias).to(device)
 with open(output_dir+'/net.txt','w+') as f:
 	#if os.path.getsize(output_dir+'/net.txt') == 0: #判断文件是否为空
 		print(G,file=f)
