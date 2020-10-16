@@ -30,10 +30,10 @@ python train_celeba128.py --z_dim=8 --scale=128 --experiment_name=spectral_norm_
 # 1KB = 1024B, 1MB = 1024KB , 1GB = 1024MB   
 
 
-python train_celeba256.py --z_dim=32 --Gscale=32 --Dscale=32 --img_size=256 --experiment_name=spectral_norm_celeba256_inputDim32_Scale32
+python train_celeba256.py --z_dim=32 --Gscale=32 --Dscale=32 --experiment_name=spectral_norm_celeba256_inputDim32_Scale32_32
 #这个版本实际上D的参数规模约是G的3.822651倍(scale=16)
 
-python train_celeba256.py --z_dim=32 --Gscale=32 --Dscale=16 --img_size=256 --experiment_name=spectral_norm_celeba256_inputDim32_Scale32_16
+python train_celeba256.py --z_dim=32 --Gscale=32 --Dscale=16 --experiment_name=spectral_norm_celeba256_inputDim32_Scale32_16
 #这个版本实际上D的参数规模和G持平,不绝对相等(Dscale=8)
 
 python train_celeba256.py --z_dim=32 --Gscale=16 --Dscale=16 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_16
@@ -43,7 +43,7 @@ python train_celeba256.py --z_dim=32 --Gscale=16 --Dscale=8 --experiment_name=sp
 #持平
 
 python train_celeba256.py --z_dim=64 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_8
-#持平
+#持平, hidden=1024
 
 #-----------------------mnist 64 ---------------------
 python train_mnist.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2_mnist_spectral_norm_lr_scheduler_gp_line
