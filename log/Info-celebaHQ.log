@@ -22,14 +22,28 @@ python train_celeba128.py --z_dim=128 --experiment_name=spectral_norm_celeba128_
 python train_celeba128.py --z_dim=8 --scale=128 --experiment_name=spectral_norm_celeba128_inputDim8_scale128 
 # 这个和上面实验中inputDim64(scale16)的网络规模一样的，区别只是input_dim不同, 结果是: 初期很暗淡，后期背景和头像都比较单一
 
-python train_celeba128.py --z_dim=16 --scale=64 --experiment_name=spectral_norm_celeba128_inputDim16_scale64
-
-python train_celeba128.py --z_dim=32 --scale=32 --experiment_name=spectral_norm_celeba128_inputDim16_scale64
-
 
 
 #---------------------- celeba 256 --------------------
-python train_celeba256.py --z_dim=32 --scale=32 --img_size=256 --experiment_name=spectral_norm_celeba256_inputDim32_Scale32
+
+#一个float =64bit(位/即双精度), 8字节即Byte. 即8bit = 1Byte. 
+# 1KB = 1024B, 1MB = 1024KB , 1GB = 1024MB   
+
+
+python train_celeba256.py --z_dim=32 --Gscale=32 --Dscale=32 --img_size=256 --experiment_name=spectral_norm_celeba256_inputDim32_Scale32
+#这个版本实际上D的参数规模约是G的3.822651倍(scale=16)
+
+python train_celeba256.py --z_dim=32 --Gscale=32 --Dscale=16 --img_size=256 --experiment_name=spectral_norm_celeba256_inputDim32_Scale32_16
+#这个版本实际上D的参数规模和G持平,不绝对相等(Dscale=8)
+
+python train_celeba256.py --z_dim=32 --Gscale=16 --Dscale=16 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_16
+# hidden=1024
+
+python train_celeba256.py --z_dim=32 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_8
+#持平
+
+python train_celeba256.py --z_dim=64 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_8
+#持平
 
 #-----------------------mnist 64 ---------------------
 python train_mnist.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2_mnist_spectral_norm_lr_scheduler_gp_line

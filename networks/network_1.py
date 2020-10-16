@@ -5,10 +5,27 @@
 # 3. scale是input_dim放大的倍数，用于决定中间隐藏层起始时的size, 其和input_dim共同决定网络参数的规模.
 # 4. 如果希望G的输入维度 和 D的输出维度对称, 则 first_hidden_dim = input_dim * scale
 
+# 测试网络规模:
+# import networks.network_1 as net
+# G = net.Generator(input_dim=32, image_size=256, scale=32)
+# D = net.Discriminator_SpectrualNorm(input_dim=32, image_size=256, scale=16)
+# x,y = net.get_parameter_number(G),net.get_parameter_number(D)
+# x_G, y_G = net.get_para_GByte(G),net.get_para_GByte(D)
+
 import torch
 from torch import nn
 import torch.nn.utils.spectral_norm as spectral_norm
 import math
+
+def get_parameter_number(net):
+    total_num = sum(p.numel() for p in net.parameters())
+    trainable_num = sum(p.numel() for p in net.parameters() if p.requires_grad)
+    return {'Total': total_num, 'Trainable': trainable_num}
+
+def get_para_GByte(parameter_number):
+     x=parameter_number['Total']*8/1024/1024/1024
+     y=parameter_number['Total']*8/1024/1024/1024
+     return {'Total_GB': x, 'Trainable_BG': y}
 
 class Generator(nn.Module):
     def __init__(self, input_dim=128, output_channels=3, image_size=128, scale=16):
