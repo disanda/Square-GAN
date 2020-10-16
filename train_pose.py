@@ -222,19 +222,19 @@ if __name__ == '__main__':
 	        #r_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device) - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean() #shift_randomD 
 	        #f_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device) + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
-	        r_loss = torch.max(0.5 - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
-	        f_loss = torch.max(0.5 + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+	        #r_loss = torch.max(0.5 - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	        #f_loss = torch.max(0.5 + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
+	        r_loss = torch.max(0.5 - (args.epochs-ep)//args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	        f_loss = torch.max(0.5 + (args.epochs-ep)//args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (r_loss + f_loss) + gp * args.gradient_penalty_weight
-	        D_loss = 1/(1+0.001*ep)*D_loss # 渐进式GP!
-
+	        D_loss = 1/(1+0.01*ep)*D_loss # 渐进式GP!
 	        D.zero_grad()
 	        D_loss.backward()
 	        D_optimizer.step()
 	        D_loss_dict={'d_loss': r_loss + f_loss, 'gp': gp}
-
 	        it_d += 1
 	        for k, v in D_loss_dict.items():
 	            writer.add_scalar('D/%s' % k, v.data.cpu().numpy(), global_step=it_d)
@@ -244,8 +244,7 @@ if __name__ == '__main__':
 	        #G_loss =  (torch.randn(1).to(device)-x_fake_d_logit_2).mean()
 	        #G_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device)-x_fake_d_logit_2, torch.zeros_like(x_fake_d_logit_2) ).mean() #* ((args.epochs-ep)//args.epochs) ) #渐进式loss
 	        G_loss = - 0.5*x_fake_d_logit_2.mean()
-	        G_loss = 1/(1+0.001*ep)*G_loss # 渐进式GP!
-
+	        G_loss = 1/(1+0.01*ep)*G_loss # 渐进式GP!
 	        G.zero_grad()
 	        G_loss.backward()
 	        G_optimizer.step()
