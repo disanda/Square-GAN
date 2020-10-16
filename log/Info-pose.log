@@ -113,5 +113,6 @@ python train_pose.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode
 python train_pose.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-05-lossALL-GP
 #距离为05，G和D的loss衰减:D_loss = 1/(1+0.001*ep)*D_loss，bias=flase
 
-python train_pose.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-05-lossALL-GP --netBias=True
+python train_pose.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --netBias=True --experiment_name=hingv2-gp-05-lossALL-GP-bias 
 #距离为05，D也衰减0.5倍。 G和D的loss衰减:D_loss = 1/(1+0.001*ep)*D_loss，bias=True , 效果开始显著？
+
