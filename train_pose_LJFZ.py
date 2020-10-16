@@ -231,8 +231,8 @@ if __name__ == '__main__':
 	            r_loss = torch.max(1 - (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
 	            f_loss = torch.max(1 + (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 	        else:
-	            r_loss = torch.max(0.5 + (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
-	            f_loss = torch.max(0.5 - (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+	            r_loss = torch.max(1 + (args.epochs-ep)/args.epochs*x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()
+	            f_loss = torch.max(1 - (args.epochs-ep)/args.epochs*x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (r_loss + f_loss) + gp * args.gradient_penalty_weight
@@ -252,7 +252,7 @@ if __name__ == '__main__':
 	        if ep < 1000:
 	            G_loss = -x_fake_d_logit_2.mean()
 	        else:
-	            G_loss = -0.5*x_fake_d_logit_2.mean()
+	            G_loss = -x_fake_d_logit_2.mean()
 	        G_loss = 1/(1+0.002*ep)*G_loss # 渐进式GP!
 	        G.zero_grad()
 	        G_loss.backward()
