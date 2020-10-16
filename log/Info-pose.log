@@ -28,7 +28,7 @@ python train.py --dataset_name=pose10 --epochs=1000 --adversarial_loss_mode=lsga
 #训练在5000多次时较稳定，但只有一个动作,无多样性
 
 
-#------------wgan
+#------------wgan----------------
 
 python train.py --dataset_name=pose10 --epochs=1000 --adversarial_loss_mode=wgan
 #训练崩溃
@@ -68,7 +68,7 @@ python train.py --dataset=pose10 --epoch=2000 --adversarial_loss_mode=hinge_v1 -
 python train.py --dataset=pose10 --epoch=2000 --adversarial_loss_mode=hinge_v1 --gradient_penalty_mode=lp --gradient_penalty_sample_mode=line --batch_size=1
 #清晰但是不全 
 
-#--------------------hingev2
+#--------------------hingev2------------
 python train.py --dataset_name=pose10 --epoch=2000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=none --gradient_penalty_sample_mode=line --batch_size=1 
 python train.py --dataset=pose10 --epoch=2000 --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=1-gp --gradient_penalty_sample_mode=dragan --batch_size=1 
 #效果好但是动作不全，和v1类似
@@ -106,3 +106,6 @@ python train128.py --dataset=mnist --epoch=6000 --gradient_penalty_mode=0-gp --g
 
 #------------------------新文件夹 确认实验--------------
 python train_pose.py --adversarial_loss_mode=hinge_v2 --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2-gp-05_decay
+
+python train.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --batch_size=1 --experiment_name=hingv2-gp-05-PG_loss_v4
+#距离为05，1000次ep后loss衰减，bias=flase

@@ -24,6 +24,7 @@ python train_celeba128.py --z_dim=8 --scale=128 --experiment_name=spectral_norm_
 
 python train_celeba128.py --z_dim=16 --scale=64 --experiment_name=spectral_norm_celeba128_inputDim16_scale64
 
+python train_celeba128.py --z_dim=32 --scale=32 --experiment_name=spectral_norm_celeba128_inputDim16_scale64
 
 
 

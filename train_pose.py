@@ -26,7 +26,7 @@ parser.add_argument('--epochs', type=int, default=5000)
 parser.add_argument('--lr', type=float, default=0.0002)
 parser.add_argument('--beta_1', type=float, default=0.5)
 parser.add_argument('--beta_2', type=float, default=0.99)
-parser.add_argument('--adversarial_loss_mode', default='gan', choices=['gan', 'hinge_v1', 'hinge_v2', 'lsgan', 'wgan'])
+parser.add_argument('--adversarial_loss_mode', default='hinge_v2', choices=['gan', 'hinge_v1', 'hinge_v2', 'lsgan', 'wgan'])
 parser.add_argument('--gradient_penalty_mode', default='none', choices=['none', '1-gp', '0-gp', 'lp'])
 parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['line', 'real', 'fake', 'dragan'])
 parser.add_argument('--gradient_penalty_weight', type=float, default=10.0)
@@ -218,12 +218,16 @@ if __name__ == '__main__':
 	        #r_loss = torch.max( 0.1+(args.epochs-ep)//args.epochs - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean()#((args.epochs-ep)//args.epochs) # Round_gp
 	        #f_loss = torch.max( 0.1+(args.epochs-ep)//args.epochs + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
 
-	        r_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device) - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean() #shift_randomD 
-	        f_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device) + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+	        #r_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device) - x_real_d_logit, torch.zeros_like(x_real_d_logit)).mean() #shift_randomD 
+	        #f_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device) + x_fake_d_logit, torch.zeros_like(x_fake_d_logit)).mean()
+
+	        r_loss = torch.max(0.5 - r_logit, torch.zeros_like(r_logit)).mean()
+	        f_loss = torch.max(0.5 + f_logit, torch.zeros_like(f_logit)).mean()
+
 
 	        gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
 	        D_loss = (r_loss + f_loss) + gp * args.gradient_penalty_weight
-	        #D_loss = 1/(1+0.001*ep)*D_loss # 渐进式GP!
+	        D_loss = 1/(1+0.001*ep)*D_loss # 渐进式GP!
 
 	        D.zero_grad()
 	        D_loss.backward()
@@ -236,7 +240,7 @@ if __name__ == '__main__':
 
 #-----------training G-----------
 	        x_fake_d_logit_2 = D(x_fake)
-	        #G_loss =  (torch.randn(1).to(device)-x_fake_d_logit_2).mean()
+	        G_loss =  (torch.randn(1).to(device)-x_fake_d_logit_2).mean()
 	        G_loss = torch.max( ((args.epochs-ep)//args.epochs)*torch.randn(1).to(device)-x_fake_d_logit_2, torch.zeros_like(x_fake_d_logit_2) ).mean() #* ((args.epochs-ep)//args.epochs) ) #渐进式loss
 	        G.zero_grad()
 	        G_loss.backward()

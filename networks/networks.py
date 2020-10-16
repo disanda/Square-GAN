@@ -28,12 +28,14 @@ class ConvGenerator(nn.Module):
                  output_channels=3,
                  dim=64,
                  n_upsamplings=4,
-                 norm='batch_norm'):
+                 norm='batch_norm'
+                 biaS = False
+                ):
         super().__init__()
         Norm = _get_norm_layer_2d(norm)
         def dconv_norm_relu(in_dim, out_dim, kernel_size=4, stride=2, padding=1):
             return nn.Sequential(
-                nn.ConvTranspose2d(in_dim, out_dim, kernel_size, stride=stride, padding=padding, bias=False or Norm == Identity),
+                nn.ConvTranspose2d(in_dim, out_dim, kernel_size, stride=stride, padding=padding, bias=biaS or Norm == Identity),
                 Norm(out_dim),
                 nn.ReLU()
             )
@@ -58,7 +60,9 @@ class ConvDiscriminator(nn.Module):
                  input_channels=3,
                  dim=64,
                  n_downsamplings=4,
-                 norm='batch_norm'):
+                 norm='batch_norm'
+                 biaS = False
+                 ):
         super().__init__()
         Norm = _get_norm_layer_2d(norm)
         def conv_norm_lrelu(in_dim, out_dim, kernel_size=4, stride=2, padding=1):
