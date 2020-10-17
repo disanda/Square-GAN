@@ -20,7 +20,7 @@ python train_celeba128.py --z_dim=128 --experiment_name=spectral_norm_celeba128_
 
 # input_dim和效果的关系
 python train_celeba128.py --z_dim=8 --scale=128 --experiment_name=spectral_norm_celeba128_inputDim8_scale128 
-# 这个和上面实验中inputDim64(scale16)的网络规模一样的，区别只是input_dim不同, 结果是: 初期很暗淡，后期背景和头像都比较单一
+# 这个和上面实验中z_dim=64(scale16)的网络规模一样的，区别只是input_dim不同, 结果是: 初期很暗淡，后期背景和头像都比较单一
 
 
 
@@ -53,11 +53,7 @@ python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=4 --experiment_name=s
 python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=16 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_16
 
 
-#-----------------------mnist 64 ---------------------
-python train_mnist.py --gradient_penalty_mode=0-gp --gradient_penalty_sample_mode=line --experiment_name=hingv2_mnist_spectral_norm_lr_scheduler_gp_line
-python train_mnist.py --experiment_name=gan_mnist
-python train_mnist.py --experiment_name=gan_mnist_SpectrualNorm
+#------------------------ celeba 512 ------------------------
+python train_celeba.py --img_size=512 --z_dim=256 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba512_inputDim256_Scale8_4
 
 
-python train_mnist.py --adversarial_loss_mode=hinge_v2 --experiment_name=hinge_v2_mnist
-python train_mnist.py --adversarial_loss_mode=hinge_v2 --experiment_name=hinge_v2_mnist_SpectrualNorm
