@@ -48,7 +48,7 @@ python train_celeba256.py --z_dim=64 --Gscale=16 --Dscale=8 --experiment_name=sp
 python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_8
 #fit:
 
-python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=4 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_16
+python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=4 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_4
 
 python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=16 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_16
 
