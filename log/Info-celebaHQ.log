@@ -46,11 +46,15 @@ python train_celeba256.py --z_dim=64 --Gscale=16 --Dscale=8 --experiment_name=sp
 #win: 持平, hidden=1024, 参数太低，不清楚. 不过，同一批z生成的图是类似的，比如背景、主色、轮廓等，意味着低size下有特征聚合的能力
 
 python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_8
-#fit:
+# dim:2048 , 效果不错
 
 python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=4 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_4
 
-python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=16 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_16
+
+python train_celeba.py --z_dim=256 --Gscale=8 --Dscale=4 --experiment_name=spectral_norm_celeba256_inputDim256_Scale8_4
+#效果将就, 2048对称，但是G要大一些, 貌似没有完全对称的好
+
+python train_celeba.py --z_dim=256 --Gscale=8 --Dscale=6 --experiment_name=spectral_norm_celeba256_inputDim256_Scale8_6
 
 
 #------------------------ celeba 512 ------------------------
