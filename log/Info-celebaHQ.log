@@ -54,6 +54,7 @@ python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=16 --experiment_name=
 
 
 #------------------------ celeba 512 ------------------------
-python train_celeba.py --img_size=512 --z_dim=256 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba512_inputDim256_Scale8_4
+python train_celeba.py --img_size=512 --z_dim=256 --Gscale=32 --Dscale=4 --experiment_name=spectral_norm_celeba512_inputDim256_Scale32_4
 
+python train_celeba.py --img_size=512 --z_dim=256 --Gscale=32 --Dscale=4 --experiment_name=spectral_norm_celeba512_inputDim256_Scale32_8
 
