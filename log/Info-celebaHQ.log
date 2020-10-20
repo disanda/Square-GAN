@@ -3,6 +3,8 @@ G 和 D 网络结构的对称性：
 2.网络输入维度
 3.中间层维度
 
+
+
 #---------------------- celeba 128--------------------
 
 # <<整个模型的参数规模>>和生成效果的关系 :
@@ -41,19 +43,21 @@ python train_celeba256.py --z_dim=32 --Gscale=32 --Dscale=32 --experiment_name=s
 python train_celeba256.py --z_dim=32 --Gscale=32 --Dscale=16 --experiment_name=spectral_norm_celeba256_inputDim32_Scale32_16
 #这个版本实际上D的参数规模和G持平,不绝对相等(Dscale=8)
 
-
 python train_celeba256.py --z_dim=64 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_8
 #win: 持平, hidden=1024, 参数太低，不清楚. 不过，同一批z生成的图是类似的，比如背景、主色、轮廓等，意味着低size下有特征聚合的能力
+
 
 python train_celeba256.py --z_dim=128 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_8
 # dim:2048 , G和D对称，input_dim: g128, D64 效果不错 
 
-python train_celeba256.py --z_dim=256 --Gscale=8 --Dscale=4 --experiment_name=spectral_norm_celeba256_inputDim32_Scale16_4
-# dim:2048 , G和D对称(和上例结构相同)，input_dim: G256, D64 效果没有上例好
+python train_celeba256.py --z_dim=256 --Gscale=8 --Dscale=4 --experiment_name=spectral_norm_celeba256_inputDim32_Scale8_4
+# dim:2048 , G和D对称(和上例结构相同,但是G要比D的参数规模大一些，因为G的input_size大一些)， 因此效果没有上例好
 ！！！ 说明 不仅需要网络对称，input_size也需要对称(差距不能太大)
 
-python train_celeba.py --z_dim=256 --Gscale=8 --Dscale=16 --experiment_name=spectral_norm_celeba256_inputDim256_Scale8_6
-# dim:2048 , G和D对称(和上例结构相同)，input_dim: G256, D256
+python train_celeba.py --z_dim=128 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim256_Scale16_8_lr
+#
+
+
 
 
 #------------------------ celeba 512 ------------------------
