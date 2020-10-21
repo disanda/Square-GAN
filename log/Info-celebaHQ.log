@@ -55,7 +55,9 @@ python train_celeba256.py --z_dim=256 --Gscale=8 --Dscale=4 --experiment_name=sp
 ！！！ 说明 不仅需要网络对称，input_size也需要对称(差距不能太大)
 
 python train_celeba.py --z_dim=128 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim256_Scale16_8_lr
-#
+#效果不好，说明lr让梯度衰减的太厉害了,或者inout过低？
+
+python train_celeba.py --z_dim=256 --Gscale=16 --Dscale=8 --experiment_name=spectral_norm_celeba256_inputDim256_Scale16_8_lr
 
 
 
