@@ -123,35 +123,4 @@ class Discriminator_SpectrualNorm(nn.Module):
         y = self.net(x)
         return y # [1,1,1,1]
 
-#需要参照上述改动重写
 
-class Encoder(nn.Module):
-    def __init__(self, input_dim=128, input_channels=3, image_size=64):
-        super().__init__()
-        layers = []
-        x = image_size//8
-
-        # 1: downsamplings, ... -> 16x16 -> 8x8 -> 4x4
-        d = dim
-        layers.append(nn.Conv2d(input_channels, d, kernel_size=4, stride=2, padding=1))
-        layers.append(nn.LeakyReLU(0.2))
-        for i in range(n_downsamplings - 1):
-            d_last = d
-            d = d*2
-            layers.append(conv_norm_lrelu(d_last, d, kernel_size=4, stride=2, padding=1))
-
-        self.net = nn.Sequential(*layers)
-
-        # 2: encoder:4*4*dim
-        #layers.append(nn.Conv2d(d, 1, kernel_size=4, stride=1, padding=0))
-        in_fc = int(input_dim*d*4*4) 
-        layers_2 = []
-        layers_2.append( spectral_norm(nn.Linear(in_fc,in_fc//d,bias=False)))
-        layers_2.append( spectral_norm(nn.Linear(in_fc,in_fc//16,bias=False)))
-        self.fc = nn.Sequential(*layers_2)
-
-    def forward(self, x):
-        y = self.net(x)
-        y = y.view(-1,dim*4*4)
-        y = self.fc(y)
-        return y # [-1,dim] 
