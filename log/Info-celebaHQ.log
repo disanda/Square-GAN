@@ -30,7 +30,7 @@ python train_celeba128.py --z_dim=8 --scale=128 --experiment_name=spectral_norm_
 # 这个和上面实验中z_dim=64(scale16)的网络规模一样的，区别只是input_dim不同, 结果是: 初期很暗淡，后期背景和头像都比较单一
 
 #想证明训练除了和输入输出维度相关外，还和层与层之间的递增的对称性相关。特别G起始层，以及D最后一层，跨度太大
-python train_celeba.py --another_times=1
+python train_celeba.py --addTraingTimes=1
 
 #---------------------- celeba 256 --------------------
 

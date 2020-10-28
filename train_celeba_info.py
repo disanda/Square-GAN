@@ -35,7 +35,7 @@ parser.add_argument('--img_size',type=int,default=128)
 parser.add_argument('--Gscale', type=int, default=16) # scale：网络隐藏层维度数,默认为 image_size//8 * image_size 
 parser.add_argument('--Dscale', type=int, default=16) 
 parser.add_argument('--z_dim', type=int, default=128) # 网络随机噪声 z 输入的维度数 即input_dim
-parser.add_argument('--another_times', type=int, default=0)
+parser.add_argument('--addTraingTimes', type=int, default=0)
 args = parser.parse_args()
 
 # output_dir
