@@ -35,13 +35,14 @@ parser.add_argument('--img_size',type=int,default=128)
 parser.add_argument('--Gscale', type=int, default=16) # scale：网络隐藏层维度数,默认为 image_size//8 * image_size 
 parser.add_argument('--Dscale', type=int, default=16) 
 parser.add_argument('--z_dim', type=int, default=128) # 网络随机噪声 z 输入的维度数 即input_dim
+parser.add_argument('--another_times', type=int, default=0)
 args = parser.parse_args()
 
 # output_dir
 if args.experiment_name == 'none':
     args.experiment_name = '%s_%s' % (args.dataset, args.adversarial_loss_mode)
 
-args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize%d' % (args.Gscale, args.Dscale, args.z_dim, args.img_size)
+args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize_v3%d_anotherTimes%d' % (args.Gscale, args.Dscale, args.z_dim, args.img_size, args.another_times)
 
 output_dir = os.path.join('output', args.experiment_name)
 
@@ -73,8 +74,8 @@ print('data-size:    '+str(shape))
 
 # networks
 
-G = net.Generator(input_dim=args.z_dim, output_channels = args.img_channels, image_size=args.img_size, scale=args.Gscale).to(device)
-D = net.Discriminator_SpectrualNorm(args.z_dim, input_channels = args.img_channels, image_size=args.img_size, scale=args.Dscale).to(device)
+G = net.Generator(input_dim=args.z_dim, output_channels = args.img_channels, image_size=args.img_size, scale=args.Gscale, another_times=args.addTraingTimes).to(device)
+D = net.Discriminator_SpectrualNorm(args.z_dim, input_channels = args.img_channels, image_size=args.img_size, scale=args.Dscale, another_times=args.addTraingTimes).to(device)
 x,y = net.get_parameter_number(G),net.get_parameter_number(D)
 x_GB, y_GB = net.get_para_GByte(x),net.get_para_GByte(y)
 with open(output_dir+'/net.txt','w+') as f:
