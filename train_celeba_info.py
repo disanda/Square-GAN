@@ -42,7 +42,7 @@ args = parser.parse_args()
 if args.experiment_name == 'none':
     args.experiment_name = '%s_%s' % (args.dataset, args.adversarial_loss_mode)
 
-args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize_v3%d_anotherTimes%d' % (args.Gscale, args.Dscale, args.z_dim, args.img_size, args.another_times)
+args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize_v3%d_anotherTimes%d' % (args.Gscale, args.Dscale, args.z_dim, args.img_size, args.addTrainTimes)
 
 output_dir = os.path.join('output', args.experiment_name)
 
