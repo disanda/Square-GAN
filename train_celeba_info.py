@@ -140,8 +140,8 @@ if __name__ == '__main__':
 
             x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit, x_fake_d_logit)
 
-            gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
-            #gp = torch.tensor(0.0)
+            #gp = g_penal.gradient_penalty(functools.partial(D), x_real, x_fake.detach(), gp_mode=args.gradient_penalty_mode, sample_mode=args.gradient_penalty_sample_mode)
+            gp = torch.tensor(0.0)
             D_loss = (x_real_d_loss + x_fake_d_loss) + gp * args.gradient_penalty_weight
             #D_loss = 1/(1+0.005*ep)*D_loss # 渐进式GP!
 
