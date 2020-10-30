@@ -203,7 +203,7 @@ if __name__ == '__main__':
 	        G2_loss = g_loss_fn(x_fake_d_logit_2) #渐进式loss
 	        #G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
 	        G2.zero_grad()
-	        G_loss2.backward()
+	        G_loss.backward()
 	        optimizerG2.step()
 	        #decayG.step()
 
