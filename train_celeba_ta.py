@@ -124,7 +124,7 @@ D2 = net2.D_2()
 optimizerG2 = torch.optim.Adam(G2.parameters(), lr=0.001 ,betas=(0, 0.99), eps=1e-8,amsgrad=True)
 optimizerD2 = torch.optim.Adam(D2.parameters(), lr=0.001 ,betas=(0, 0.99), eps=1e-8,amsgrad=True)
 
-with open(resultPath+'/setting.txt', 'w') as f:
+with open(output_dir+'/setting.txt', 'w') as f:
 	print('----',file=f)
 	print(netG2,file=f)
 	print('----',file=f)
