@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser(description='the training args')
 parser.add_argument('--epochs', type=int, default=100)
 parser.add_argument('--lr', type=float, default=0.0002)
 parser.add_argument('--beta_1', type=float, default=0.5)
-parser.add_argument('--batch_size', type=int, default=32)
+parser.add_argument('--batch_size', type=int, default=16)
 parser.add_argument('--adversarial_loss_mode', default='gan', choices=['gan', 'hinge_v1', 'hinge_v2', 'lsgan', 'wgan'])
 parser.add_argument('--gradient_penalty_mode', default='none', choices=['none', '1-gp', '0-gp', 'lp'])
 parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['line', 'real', 'fake', 'dragan'])
@@ -170,16 +170,13 @@ if __name__ == '__main__':
 	        z = torch.randn(args.batch_size, args.z_dim, 1, 1).to(device)
 
 #--------training D-----------
-	        with torch.no_grad():
-	            x_fake_1 = G(z)
+	        x_fake_1 = G(z)
 	        x_fake_2 = G2(x_fake_1)
 	        x_real_d_logit_1 = D2(x_fake_2)
-	        with torch.no_grad():
-	            x_real_d_logit_2 = D(x_real_d_logit_1)
+	        x_real_d_logit_2 = D(x_real_d_logit_1)
 
 	        x_fake_d_logit_1 = D2(x_fake_2.detach())
-	        with torch.no_grad():
-	            x_fake_d_logit_2 = D(x_fake_d_logit_1.detach())
+	        x_fake_d_logit_2 = D(x_fake_d_logit_1.detach())
 
 
 	        x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit_2, x_fake_d_logit_2)
@@ -202,8 +199,7 @@ if __name__ == '__main__':
 
 #-----------training G-----------
 	        x_fake_d_logit_1 = D2(x_fake_2)
-	        with torch.no_grad():
-	            x_fake_d_logit_2 = D(x_fake_d_logit_1)
+	        x_fake_d_logit_2 = D(x_fake_d_logit_1)
 	        G2_loss = g_loss_fn(x_fake_d_logit_2) #渐进式loss
 	        #G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
 	        G2.zero_grad()
