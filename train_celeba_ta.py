@@ -187,7 +187,7 @@ if __name__ == '__main__':
 	        #D_loss = 1/(1+0.005*ep)*D_loss # 渐进式GP!
 
 	        D2.zero_grad()
-	        D2_loss.backward()
+	        D2_loss.backward(retain_graph=True)
 	        optimizerD2.step()
 	        #decayD.step()
 
