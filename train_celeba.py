@@ -41,7 +41,7 @@ args = parser.parse_args()
 if args.experiment_name == 'none':
     args.experiment_name = '%s_%s' % (args.dataset, args.adversarial_loss_mode)
 
-args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize%d_v2_2' % (args.Gscale, args.Dscale, args.z_dim, args.img_size)
+args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize%d_v2_2_nolr' % (args.Gscale, args.Dscale, args.z_dim, args.img_size)
 
 output_dir = os.path.join('output', args.experiment_name)
 
@@ -95,8 +95,8 @@ d_loss_fn, g_loss_fn = loss_func.get_adversarial_losses_fn(args.adversarial_loss
 # optimizer
 G_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
 D_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(args.beta_1, 0.999))
-decayG = torch.optim.lr_scheduler.ExponentialLR(G_optimizer, gamma=1)
-decayD = torch.optim.lr_scheduler.ExponentialLR(D_optimizer, gamma=1)
+#decayG = torch.optim.lr_scheduler.ExponentialLR(G_optimizer, gamma=1)
+#decayD = torch.optim.lr_scheduler.ExponentialLR(D_optimizer, gamma=1)
 
 
 @torch.no_grad()
@@ -148,7 +148,7 @@ if __name__ == '__main__':
 	        D.zero_grad()
 	        D_loss.backward()
 	        D_optimizer.step()
-	        decayD.step()
+	        #decayD.step()
 
 	        D_loss_dict={'d_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
 
@@ -163,7 +163,7 @@ if __name__ == '__main__':
 	        G.zero_grad()
 	        G_loss.backward()
 	        G_optimizer.step()
-	        decayG.step()
+	        #decayG.step()
 
 	        it_g += 1
 	        G_loss_dict = {'g_loss': G_loss}
