@@ -112,8 +112,8 @@ def toggle_grad(model, requires_grad):
     for p in model.parameters():
         p.requires_grad_(requires_grad)
 
-G.load_state_dict(torch.load('./pre-model/G_in256_D4.pth',map_location=device)) #shadow的效果要好一些 
-D.load_state_dict(torch.load('./pre-model/D_in256_G8.pth',map_location=device))
+G.load_state_dict(torch.load('./pre-model/G_in256_G8.pth',map_location=device)) #shadow的效果要好一些 
+D.load_state_dict(torch.load('./pre-model/D_in256_D4.pth',map_location=device))
 
 toggle_grad(G,False)
 toggle_grad(D,False)
