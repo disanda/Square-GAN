@@ -115,8 +115,8 @@ def toggle_grad(model, requires_grad):
 G.load_state_dict(torch.load('./pre-model/G_in256_G8.pth',map_location=device)) #shadow的效果要好一些 
 D.load_state_dict(torch.load('./pre-model/D_in256_D4.pth',map_location=device))
 
-toggle_grad(G,False)
-toggle_grad(D,False)
+#toggle_grad(G,False)
+#toggle_grad(D,False)
 
 G2 = net2.G_2().to(device)
 D2 = net2.D_2().to(device)
@@ -198,11 +198,9 @@ if __name__ == '__main__':
 	            writer.add_scalar('D/%s' % k, v.data.cpu().numpy(), global_step=it_d)
 
 #-----------training G-----------
-	        x_fake_g = G(z)
-	        x_fake_g_2 = G2(x_fake_g)
-	        x_fake_g_logit_1 = D2(x_fake_g_2)
+	        x_fake_g_logit_1 = D2(x_fake_2)
 	        x_fake_g_logit_2 = D(x_fake_g_logit_1)
-	        G2_loss = g_loss_fn(x_fake_d_logit_2) #渐进式loss
+	        G2_loss = g_loss_fn(x_fake_g_logit_2) #渐进式loss
 	        #G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
 	        G2.zero_grad()
 	        G2_loss.backward()
