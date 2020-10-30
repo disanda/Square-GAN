@@ -187,7 +187,7 @@ if __name__ == '__main__':
 	        #D_loss = 1/(1+0.005*ep)*D_loss # 渐进式GP!
 
 	        D2.zero_grad()
-	        D2_loss.backward(retain_graph=True)
+	        D2_loss.backward()
 	        optimizerD2.step()
 	        #decayD.step()
 
@@ -198,8 +198,10 @@ if __name__ == '__main__':
 	            writer.add_scalar('D/%s' % k, v.data.cpu().numpy(), global_step=it_d)
 
 #-----------training G-----------
-	        x_fake_d_logit_1 = D2(x_fake_2)
-	        x_fake_d_logit_2 = D(x_fake_d_logit_1)
+	        x_fake_g = G(z)
+	        x_fake_g_2 = G2(x_fake_g)
+	        x_fake_g_logit_1 = D2(x_fake_g_2)
+	        x_fake_g_logit_2 = D(x_fake_g_logit_1)
 	        G2_loss = g_loss_fn(x_fake_d_logit_2) #渐进式loss
 	        #G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
 	        G2.zero_grad()
