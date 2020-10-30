@@ -216,7 +216,7 @@ if __name__ == '__main__':
 	        if (it_g)%100==0:
 	        #x_fake = (sample(z)+1)/2
 	            with torch.no_grad():
-	                z_t = torch.randn(36, args.z_dim, 1, 1).to(device)
+	                z_t = torch.randn(4, args.z_dim, 1, 1).to(device)
 	                x_fake = sample(z_t)
 	                x_fake_2 = G2(x_fake)
 	                torchvision.utils.save_image(x_fake,sample_dir+'/ep%d_it%d.jpg'%(ep,it_g), nrow=6)
