@@ -32,8 +32,8 @@ parser.add_argument('--experiment_name', default='none')
 parser.add_argument('--dataset', default='celeba_HQ')#choices=['cifar10', 'fashion_mnist', 'mnist', 'celeba', 'anime', 'custom'])
 parser.add_argument('--img_channels', type=int, default=3)# RGB:3 ,L:1
 parser.add_argument('--img_size',type=int,default=128)
-parser.add_argument('--Gscale', type=int, default=16) # scale：网络隐藏层维度数,默认为 image_size//8 * image_size 
-parser.add_argument('--Dscale', type=int, default=16) 
+parser.add_argument('--Gscale', type=int, default=8) # scale：网络隐藏层维度数,默认为 image_size//8 * image_size 
+parser.add_argument('--Dscale', type=int, default=8) 
 parser.add_argument('--z_dim', type=int, default=256) # 网络随机噪声 z 输入的维度数 即input_dim
 args = parser.parse_args()
 
