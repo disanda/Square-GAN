@@ -170,13 +170,16 @@ if __name__ == '__main__':
 	        z = torch.randn(args.batch_size, args.z_dim, 1, 1).to(device)
 
 #--------training D-----------
-	        x_fake_1 = G(z)
+	        with torch.no_grad():
+	            x_fake_1 = G(z)
 	        x_fake_2 = G2(x_fake_1)
 	        x_real_d_logit_1 = D2(x_fake_2)
-	        x_real_d_logit_2 = D(x_real_d_logit_1)
+	        with torch.no_grad():
+	            x_real_d_logit_2 = D(x_real_d_logit_1)
 
 	        x_fake_d_logit_1 = D2(x_fake_2.detach())
-	        x_fake_d_logit_2 = D(x_fake_d_logit_1.detach())
+	        with torch.no_grad():
+	            x_fake_d_logit_2 = D(x_fake_d_logit_1.detach())
 
 
 	        x_real_d_loss, x_fake_d_loss = d_loss_fn(x_real_d_logit_2, x_fake_d_logit_2)
@@ -199,7 +202,8 @@ if __name__ == '__main__':
 
 #-----------training G-----------
 	        x_fake_d_logit_1 = D2(x_fake_2)
-	        x_fake_d_logit_2 = D(x_fake_d_logit_1)
+	        with torch.no_grad():
+	            x_fake_d_logit_2 = D(x_fake_d_logit_1)
 	        G2_loss = g_loss_fn(x_fake_d_logit_2) #渐进式loss
 	        #G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
 	        G2.zero_grad()
