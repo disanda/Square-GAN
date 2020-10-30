@@ -118,8 +118,8 @@ D.load_state_dict(torch.load('./pre-model/D_in256_D4.pth',map_location=device))
 toggle_grad(G,False)
 toggle_grad(D,False)
 
-G2 = net2.G_2()
-D2 = net2.D_2()
+G2 = net2.G_2().to(device)
+D2 = net2.D_2().to(device)
 
 optimizerG2 = torch.optim.Adam(G2.parameters(), lr=0.001 ,betas=(0, 0.99), eps=1e-8,amsgrad=True)
 optimizerD2 = torch.optim.Adam(D2.parameters(), lr=0.001 ,betas=(0, 0.99), eps=1e-8,amsgrad=True)
