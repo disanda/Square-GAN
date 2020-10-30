@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser(description='the training args')
 parser.add_argument('--epochs', type=int, default=100)
 parser.add_argument('--lr', type=float, default=0.0002)
 parser.add_argument('--beta_1', type=float, default=0.5)
-parser.add_argument('--batch_size', type=int, default=16)
+parser.add_argument('--batch_size', type=int, default=4)
 parser.add_argument('--adversarial_loss_mode', default='gan', choices=['gan', 'hinge_v1', 'hinge_v2', 'lsgan', 'wgan'])
 parser.add_argument('--gradient_penalty_mode', default='none', choices=['none', '1-gp', '0-gp', 'lp'])
 parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['line', 'real', 'fake', 'dragan'])
@@ -188,7 +188,7 @@ if __name__ == '__main__':
 
 	        D2.zero_grad()
 	        D2_loss.backward()
-	        D2_optimizer.step()
+	        optimizerD2.step()
 	        #decayD.step()
 
 	        D_loss_dict={'d2_loss': x_real_d_loss + x_fake_d_loss, 'gp': gp}
@@ -204,7 +204,7 @@ if __name__ == '__main__':
 	        #G_loss = 1/(1+ep*0.01)*g_loss_fn(x_fake_d_logit) #渐进式loss
 	        G2.zero_grad()
 	        G_loss2.backward()
-	        G2_optimizer.step()
+	        optimizerG2.step()
 	        #decayG.step()
 
 	        it_g += 1
