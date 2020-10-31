@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser(description='the training args')
 parser.add_argument('--epochs', type=int, default=100)
 parser.add_argument('--lr', type=float, default=0.0002)
 parser.add_argument('--beta_1', type=float, default=0.5)
-parser.add_argument('--batch_size', type=int, default=4)
+parser.add_argument('--batch_size', type=int, default=64)
 parser.add_argument('--adversarial_loss_mode', default='gan', choices=['gan', 'hinge_v1', 'hinge_v2', 'lsgan', 'wgan'])
 parser.add_argument('--gradient_penalty_mode', default='none', choices=['none', '1-gp', '0-gp', 'lp'])
 parser.add_argument('--gradient_penalty_sample_mode', default='line', choices=['line', 'real', 'fake', 'dragan'])
@@ -41,7 +41,7 @@ args = parser.parse_args()
 if args.experiment_name == 'none':
     args.experiment_name = '%s_%s' % (args.dataset, args.adversarial_loss_mode)
 
-args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize%d_TA_v1' % (args.Gscale, args.Dscale, args.z_dim, args.img_size)
+args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize%d_batch_size%d_TA_v1' % (args.Gscale, args.Dscale, args.z_dim, args.img_size,args.batch_size)
 
 output_dir = os.path.join('output', args.experiment_name)
 
