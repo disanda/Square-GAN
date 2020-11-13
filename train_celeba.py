@@ -33,7 +33,7 @@ parser.add_argument('--dataset', default='celeba_HQ')#choices=['cifar10', 'fashi
 parser.add_argument('--img_channels', type=int, default=3)# RGB:3 ,L:1
 parser.add_argument('--img_size',type=int,default=256)
 parser.add_argument('--Gscale', type=int, default=8) # scale：网络隐藏层维度数,默认为 image_size//8 * image_size 
-parser.add_argument('--Dscale', type=int, default=8) 
+parser.add_argument('--Dscale', type=int, default=4) 
 parser.add_argument('--z_dim', type=int, default=1024) # 网络随机噪声 z 输入的维度数 即input_dim
 args = parser.parse_args()
 
@@ -41,7 +41,7 @@ args = parser.parse_args()
 if args.experiment_name == 'none':
     args.experiment_name = '%s_%s' % (args.dataset, args.adversarial_loss_mode)
 
-args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize%d_batch_size%d_netv2' % (args.Gscale, args.Dscale, args.z_dim, args.img_size,args.batch_size)
+args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize%d_batch_size%d' % (args.Gscale, args.Dscale, args.z_dim, args.img_size,args.batch_size)
 
 output_dir = os.path.join('output', args.experiment_name)
 
