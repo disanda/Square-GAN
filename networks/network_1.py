@@ -113,7 +113,7 @@ class Discriminator_SpectrualNorm(nn.Module):
             up_times = up_times - 1
 
         # 3: 4*4 > 1*1
-        layers.append(nn.Conv2d(hidden_dim, 1, kernel_size=4, stride=1, padding=0))
+        layers.append(nn.Conv2d(hidden_dim, input_dim, kernel_size=4, stride=1, padding=0))
         #layers.append(nn.Sigmoid())
 
         # all:
@@ -121,6 +121,6 @@ class Discriminator_SpectrualNorm(nn.Module):
 
     def forward(self, x):
         y = self.net(x)
-        return y # [1,1,1,1]
+        return y.mean() # [1,1,1,1]
 
 
