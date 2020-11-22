@@ -103,7 +103,6 @@ class Discriminator_SpectrualNorm(nn.Module):
         while up_times>0:  
             layers.append(spectral_norm(nn.Conv2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
             layers.append(nn.LeakyReLU(0.2, inplace=True))
-            hidden_dim = hidden_dim * 2
             up_times = up_times - 1
 
         # 3: 4*4 > 1*1
