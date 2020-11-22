@@ -12,7 +12,9 @@
 # x,y = net.get_parameter_number(G),net.get_parameter_number(D)
 # x_G, y_G = net.get_para_GByte(G),net.get_para_GByte(D)
 
-#第1版，D2E ,E的参数和G完全相同，即输入和G输入对应
+#第1版，D2E , E的参数和G完全相同，即输入和G输入对应
+
+#第2版, D2E , 增加网络间的通道融合，让网络更加对称
 
 import torch
 from torch import nn
@@ -33,26 +35,36 @@ class Generator(nn.Module):
     def __init__(self, input_dim=128, output_channels=3, image_size=128, scale=16, another_times=0):
         super().__init__()
         layers = []
-        up_times = math.log(image_size,2)- 3# 减去前两次 1->2->4， 及最后一次， 方便中间写循环
-        first_hidden_dim = input_dim*scale # 这里对应输入维度，表示《输入维度》对应《网络中间层维度（起点）》的放大倍数
         bias_flag = False
+        up_times = 5
 
         # 1: 1x1 -> 4x4
-        layers.append(nn.ConvTranspose2d(input_dim, first_hidden_dim, kernel_size=4,stride=1,padding=0,bias=bias_flag))
-        layers.append(nn.BatchNorm2d(first_hidden_dim))
+        layers.append(nn.ConvTranspose2d(512, 512, kernel_size=4,stride=1,padding=0,bias=bias_flag))
+        layers.append(nn.BatchNorm2d(512))
         layers.append(nn.ReLU())
 
-        # 2: upsamplings, 4x4 -> 8x8 -> 16x16 -> 32*32
-        hidden_dim = first_hidden_dim
+        # 2: upsamplings, 4x4 -> 8x8 -> 16x16 -> 32*32 -> 64 -> 128
         while up_times>0:
-            layers.append(nn.ConvTranspose2d(hidden_dim, hidden_dim//2, kernel_size=4, stride=2, padding=1 ,bias=bias_flag))
-            layers.append(nn.BatchNorm2d(hidden_dim//2))
+            layers.append(nn.ConvTranspose2d(512, 512, kernel_size=4, stride=2, padding=1 ,bias=bias_flag))
+            layers.append(nn.BatchNorm2d(512))
             layers.append(nn.ReLU())
             up_times = up_times - 1
-            hidden_dim = hidden_dim // 2
+
 
         # 3:end 
-        layers.append(nn.ConvTranspose2d(hidden_dim,output_channels,kernel_size=4, stride=2, padding=1, bias=bias_flag))
+        layers.append(nn.ConvTranspose2d(512,256,kernel_size=4, stride=2, padding=1, bias=bias_flag))
+        layers.append(nn.Tanh())
+
+        layers.append(nn.ConvTranspose2d(256,128,kernel_size=1))
+        layers.append(nn.Tanh())
+
+        layers.append(nn.ConvTranspose2d(128,64,kernel_size=1))
+        layers.append(nn.Tanh())
+
+        layers.append(nn.ConvTranspose2d(64,32,kernel_size=1))
+        layers.append(nn.Tanh())
+
+        layers.append(nn.ConvTranspose2d(32,3, kernel_size=1))
         layers.append(nn.Tanh())
 
         # all
@@ -62,60 +74,40 @@ class Generator(nn.Module):
         x = self.net(z)
         return x
 
-class Discriminator(nn.Module):
-    def __init__(self, input_dim=128, input_channels=3, image_size=128, scale=16, another_times=0):
-        super().__init__()
-        layers=[]
-        up_times = math.log(image_size,2)- 3
-        first_hidden_dim = input_dim*scale//16 # 默认为input_dim 
-        bias_flag = False
-
-        # 1:
-        layers.append(nn.Conv2d(input_channels, first_hidden_dim, kernel_size=4, stride=2, padding=1, bias=bias_flag))
-        layers.append(nn.LeakyReLU(0.2, inplace=True))
-
-        # 2: 64*64 > 4*4
-        hidden_dim = first_hidden_dim
-        while up_times>0:  
-            layers.append(nn.Conv2d(hidden_dim, hidden_dim*2, kernel_size=4, stride=2, padding=1, bias=bias_flag))
-            layers.append(nn.BatchNorm2d(hidden_dim*2))
-            layers.append(nn.LeakyReLU(0.2, inplace=True))
-            hidden_dim = hidden_dim * 2
-            up_times = up_times - 1
-
-        # 3: 4*4 > 1*1
-        layers.append(nn.Conv2d(hidden_dim, 1, kernel_size=4, stride=1, padding=0))
-        #layers.append(nn.Sigmoid())
-
-        # all:
-        self.net = nn.Sequential(*layers)
-
-    def forward(self, x):
-        y = self.net(x)
-        return y # [1,1,1,1]
 
 class Discriminator_SpectrualNorm(nn.Module):
     def __init__(self, input_dim=128, input_channels=3, image_size=128, scale=16, another_times=0):
         super().__init__()
         layers=[]
-        up_times = math.log(image_size,2)- 3
-        first_hidden_dim = input_dim * scale // 16 # 默认为input_dim 
+        up_times = 5
         bias_flag = False
 
         # 1:
-        layers.append(spectral_norm(nn.Conv2d(input_channels, first_hidden_dim, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+        layers.append(spectral_norm(nn.Conv2d(3, 32, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
         layers.append(nn.LeakyReLU(0.2, inplace=True))
 
+        layers.append(spectral_norm(nn.Conv2d(32, 64, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+        layers.append(nn.LeakyReLU(0.2, inplace=True))
+
+        layers.append(spectral_norm(nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+        layers.append(nn.LeakyReLU(0.2, inplace=True))
+
+        layers.append(spectral_norm(nn.Conv2d(128, 256, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+        layers.append(nn.LeakyReLU(0.2, inplace=True))
+
+        layers.append(spectral_norm(nn.Conv2d(256, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+        layers.append(nn.LeakyReLU(0.2, inplace=True))
+
+
         # 2: 64*64 > 4*4
-        hidden_dim = first_hidden_dim
         while up_times>0:  
-            layers.append(spectral_norm(nn.Conv2d(hidden_dim, hidden_dim*2, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+            layers.append(spectral_norm(nn.Conv2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
             layers.append(nn.LeakyReLU(0.2, inplace=True))
             hidden_dim = hidden_dim * 2
             up_times = up_times - 1
 
         # 3: 4*4 > 1*1
-        layers.append(nn.Conv2d(hidden_dim, input_dim, kernel_size=4, stride=1, padding=0))
+        layers.append(nn.Conv2d(512, 512, kernel_size=4, stride=1, padding=0))
         #layers.append(nn.Sigmoid())
 
         # all:
