@@ -84,10 +84,10 @@ class Discriminator_SpectrualNorm(nn.Module):
         bias_flag = False
 
         # 1:
-        layers.append(spectral_norm(nn.Conv2d(512, 512, kernel_size=1, bias=bias_flag)))
+        layers.append(spectral_norm(nn.Conv2d(3, 256, kernel_size=1, bias=bias_flag)))
         layers.append(nn.LeakyReLU(0.2, inplace=True))
 
-        layers.append(spectral_norm(nn.Conv2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+        layers.append(spectral_norm(nn.Conv2d(256, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
         layers.append(nn.LeakyReLU(0.2, inplace=True))
 
         # 2: 64*64 > 4*4
