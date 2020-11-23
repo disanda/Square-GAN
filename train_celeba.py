@@ -9,7 +9,7 @@ import yaml
 import torchvision
 
 import data
-import networks.D2E_v2 as net
+import networks.D2E_v3 as net
 import loss_func
 import g_penal
 
@@ -41,7 +41,7 @@ args = parser.parse_args()
 if args.experiment_name == 'none':
     args.experiment_name = '%s_%s' % (args.dataset, args.adversarial_loss_mode)
 
-args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize%d_batch_size%d_v3_D2Ev2' % (args.Gscale, args.Dscale, args.z_dim, args.img_size,args.batch_size)
+args.experiment_name += '_Gscale%d_Dscale%d_z_dim%d_imgSize%d_batch_size%d_D2Ev3' % (args.Gscale, args.Dscale, args.z_dim, args.img_size,args.batch_size)
 
 output_dir = os.path.join('output', args.experiment_name)
 
