@@ -62,32 +62,32 @@ class Generator(nn.Module):
         up_times = 5
 
         # 1: 1x1 -> 4x4
-        layers.append(nn.EqualConv2d(512, 512, kernel_size=4,stride=1,padding=0,bias=bias_flag))
+        layers.append(EqualConv2d(512, 512, kernel_size=4,stride=1,padding=0,bias=bias_flag))
         layers.append(PixelNormLayer(512))
         layers.append(nn.ReLU())
 
-        layers.append(nn.EqualConv2d(512, 512, kernel_size=3,stride=1,padding=1,bias=bias_flag))
+        layers.append(EqualConv2d(512, 512, kernel_size=3,stride=1,padding=1,bias=bias_flag))
         layers.append(PixelNormLayer(512))
         layers.append(nn.ReLU())
 
         # 2: upsamplings, 4x4 -> 8x8 -> 16x16 -> 32*32 -> 64 -> 128
         while up_times>0:
-            layers.append(nn.EqualConv2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag))
+            layers.append(EqualConv2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag))
             layers.append(PixelNormLayer(512))
             layers.append(nn.ReLU())
-            layers.append(nn.EqualConv2d(512, 512, kernel_size=3, stride=1, padding=1, bias=bias_flag))
+            layers.append(EqualConv2d(512, 512, kernel_size=3, stride=1, padding=1, bias=bias_flag))
             layers.append(PixelNormLayer(512))
             layers.append(nn.ReLU())
             up_times = up_times - 1
 
 
         # 3:end 
-        layers.append(nn.EqualConv2d(512,256, kernel_size=4,stride=2, padding=1, bias=bias_flag))
+        layers.append(EqualConv2d(512,256, kernel_size=4,stride=2, padding=1, bias=bias_flag))
         PixelNormLayer()
         layers.append(nn.Tanh())
 
 
-        layers.append(nn.EqualConv2d(256,3,kernel_size=3, padding=1, bias=bias_flag))
+        layers.append(EqualConv2d(256,3,kernel_size=3, padding=1, bias=bias_flag))
         PixelNormLayer()
         layers.append(nn.Tanh())
 
