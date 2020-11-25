@@ -133,7 +133,6 @@ if __name__ == '__main__':
 	        z = torch.randn(args.batch_size, args.z_dim, 1, 1).to(device)
 
 #--------training D-----------
-	        z =  z.view(-1,args.z_dim)
 	        x_fake = G(z)
 	        #print('x_real.shape:'+str(x_real.shape))
 	        x_real_d_logit = D(x_real)
