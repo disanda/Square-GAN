@@ -21,6 +21,7 @@ import torch
 from torch import nn
 import torch.nn.utils.spectral_norm as spectral_norm
 import math
+import torch.nn.functional as F
 
 def get_parameter_number(net):
     total_num = sum(p.numel() for p in net.parameters())
