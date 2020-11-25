@@ -76,7 +76,7 @@ def get_adversarial_losses_fn(mode):
     elif mode == 'lsgan':
         return get_lsgan_losses_fn()
     elif mode == 'wgan':
-        return get_wgan_losses_fn
+        return get_wgan_losses_fn()
 
 def get_hinge_v2_1_losses_fn():
     def d_loss_fn(r_logit, f_logit):
