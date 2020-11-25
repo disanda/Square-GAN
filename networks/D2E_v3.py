@@ -63,32 +63,32 @@ class Generator(nn.Module):
         up_times = 5
 
         # 1: 1x1 -> 4x4
-        layers.append(EqualConv2d(512, 512, kernel_size=4,stride=1,padding=0,bias=bias_flag))
+        layers.append(nn.ConvTranspose2d(512, 512, kernel_size=4,stride=1,padding=0,bias=bias_flag))
         layers.append(PixelNormLayer(512))
         layers.append(nn.ReLU())
 
-        layers.append(EqualConv2d(512, 512, kernel_size=3,stride=1,padding=1,bias=bias_flag))
+        layers.append(nn.ConvTranspose2d(512, 512, kernel_size=3,stride=1,padding=1,bias=bias_flag))
         layers.append(PixelNormLayer(512))
         layers.append(nn.ReLU())
 
         # 2: upsamplings, 4x4 -> 8x8 -> 16x16 -> 32*32 -> 64 -> 128
         while up_times>0:
-            layers.append(EqualConv2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag))
+            layers.append(nn.ConvTranspose2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag))
             layers.append(PixelNormLayer(512))
             layers.append(nn.ReLU())
-            layers.append(EqualConv2d(512, 512, kernel_size=3, stride=1, padding=1, bias=bias_flag))
+            layers.append(nn.ConvTranspose2d(512, 512, kernel_size=3, stride=1, padding=1, bias=bias_flag))
             layers.append(PixelNormLayer(512))
             layers.append(nn.ReLU())
             up_times = up_times - 1
 
 
         # 3:end 
-        layers.append(EqualConv2d(512,256, kernel_size=4,stride=2, padding=1, bias=bias_flag))
+        layers.append(nn.ConvTranspose2d(512,256, kernel_size=4,stride=2, padding=1, bias=bias_flag))
         PixelNormLayer()
         layers.append(nn.Tanh())
 
 
-        layers.append(EqualConv2d(256,3,kernel_size=3, padding=1, bias=bias_flag))
+        layers.append(nn.ConvTranspose2d(256,3,kernel_size=3, padding=1, bias=bias_flag))
         PixelNormLayer()
         layers.append(nn.Tanh())
 
@@ -109,22 +109,22 @@ class Discriminator_SpectrualNorm(nn.Module):
         bias_flag = False
 
         # 1:
-        layers.append(spectral_norm(nn.Conv2d(3, 256, kernel_size=3, padding=1, bias=bias_flag)))
+        layers.append(spectral_norm(EqualConv2d(3, 256, kernel_size=3, padding=1, bias=bias_flag)))
         layers.append(nn.LeakyReLU(0.2, inplace=True))
 
-        layers.append(spectral_norm(nn.Conv2d(256, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+        layers.append(spectral_norm(EqualConv2d(256, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
         layers.append(nn.LeakyReLU(0.2, inplace=True))
 
         # 2: 64*64 > 4*4
         while up_times>0:
-            layers.append(spectral_norm(nn.Conv2d(512, 512, kernel_size=3, padding=1, bias=bias_flag)))
+            layers.append(spectral_norm(EqualConv2d(512, 512, kernel_size=3, padding=1, bias=bias_flag)))
             layers.append(nn.LeakyReLU(0.2, inplace=True))
-            layers.append(spectral_norm(nn.Conv2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
+            layers.append(spectral_norm(EqualConv2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag)))
             layers.append(nn.LeakyReLU(0.2, inplace=True))
             up_times = up_times - 1
 
         # 3: 4*4 > 1*1
-        layers.append(spectral_norm(nn.Conv2d(512, 512, kernel_size=3, padding=1, bias=bias_flag)))
+        layers.append(spectral_norm(EqualConv2d(512, 512, kernel_size=3, padding=1, bias=bias_flag)))
         layers.append(nn.Conv2d(512, 512, kernel_size=4, stride=1, padding=0))
         #layers.append(nn.Sigmoid())
 
