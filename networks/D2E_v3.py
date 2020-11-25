@@ -32,6 +32,28 @@ def get_para_GByte(parameter_number):
      y=parameter_number['Total']*8/1024/1024/1024
      return {'Total_GB': x, 'Trainable_BG': y}
 
+class PixelNormLayer(nn.Module):
+    def __init__(self, inchannel=0, epsilon=1e-8):
+        super().__init__()
+        self.epsilon = epsilon
+    def forward(self, x):
+        return x * torch.rsqrt(torch.mean(x**2, dim=1, keepdim=True) + self.epsilon)
+
+class EqualConv2d(nn.Module):
+    def __init__(self, in_channel, out_channel, kernel_size, stride=1, padding=0, bias=True):
+        super().__init__()
+        self.weight = nn.Parameter(torch.randn(out_channel, in_channel, kernel_size, kernel_size))
+        self.scale = 1 / math.sqrt(in_channel * kernel_size ** 2)
+        self.stride = stride
+        self.padding = padding
+        if bias:
+            self.bias = nn.Parameter(torch.zeros(out_channel))
+        else:
+            self.bias = None
+    def forward(self, input):
+        out = F.conv2d(input,self.weight * self.scale,bias=self.bias,stride=self.stride,padding=self.padding)
+        return out
+
 class Generator(nn.Module):
     def __init__(self, input_dim=128, output_channels=3, image_size=128, scale=16, another_times=0):
         super().__init__()
@@ -40,31 +62,33 @@ class Generator(nn.Module):
         up_times = 5
 
         # 1: 1x1 -> 4x4
-        layers.append(nn.ConvTranspose2d(512, 512, kernel_size=4,stride=1,padding=0,bias=bias_flag))
-        layers.append(nn.BatchNorm2d(512))
+        layers.append(nn.EqualConv2d(512, 512, kernel_size=4,stride=1,padding=0,bias=bias_flag))
+        layers.append(PixelNormLayer(512))
         layers.append(nn.ReLU())
 
-        layers.append(nn.ConvTranspose2d(512, 512, kernel_size=3,stride=1,padding=1,bias=bias_flag))
-        layers.append(nn.BatchNorm2d(512))
+        layers.append(nn.EqualConv2d(512, 512, kernel_size=3,stride=1,padding=1,bias=bias_flag))
+        layers.append(PixelNormLayer(512))
         layers.append(nn.ReLU())
 
         # 2: upsamplings, 4x4 -> 8x8 -> 16x16 -> 32*32 -> 64 -> 128
         while up_times>0:
-            layers.append(nn.ConvTranspose2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag))
-            layers.append(nn.BatchNorm2d(512))
+            layers.append(nn.EqualConv2d(512, 512, kernel_size=4, stride=2, padding=1, bias=bias_flag))
+            layers.append(PixelNormLayer(512))
             layers.append(nn.ReLU())
-            layers.append(nn.ConvTranspose2d(512, 512, kernel_size=3, stride=1, padding=1, bias=bias_flag))
-            layers.append(nn.BatchNorm2d(512))
+            layers.append(nn.EqualConv2d(512, 512, kernel_size=3, stride=1, padding=1, bias=bias_flag))
+            layers.append(PixelNormLayer(512))
             layers.append(nn.ReLU())
             up_times = up_times - 1
 
 
         # 3:end 
-        layers.append(nn.ConvTranspose2d(512,256, kernel_size=4,stride=2, padding=1, bias=bias_flag))
+        layers.append(nn.EqualConv2d(512,256, kernel_size=4,stride=2, padding=1, bias=bias_flag))
+        PixelNormLayer()
         layers.append(nn.Tanh())
 
 
-        layers.append(nn.ConvTranspose2d(256,3,kernel_size=3, padding=1, bias=bias_flag))
+        layers.append(nn.EqualConv2d(256,3,kernel_size=3, padding=1, bias=bias_flag))
+        PixelNormLayer()
         layers.append(nn.Tanh())
 
 
